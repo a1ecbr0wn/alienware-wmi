@@ -1,0 +1,15 @@
+[package]
+name = "alienware_api"
+version = "0.1.0"
+edition = "2021"
+authors = ["Alec Brown <alec@noser.net>"]
+description = "API to control the lights on an Alienware Alpha R2"
+license = "Apache-2.0"
+repository = "https://github.com/a1ecbr0wn/alienware-wmi"
+homepage = "https://github.com/a1ecbr0wn/alienware-wmi"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1.5.4"
+lazy_static = "1.4.0"

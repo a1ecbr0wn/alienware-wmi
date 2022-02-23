@@ -1,0 +1,20 @@
+[package]
+name = "alienware_cli"
+version = "0.1.0"
+edition = "2021"
+authors = ["Alec Brown <alec@noser.net>"]
+description = "Command Line app to control the lights on an Alienware Alpha R2"
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+path = "src/main.rs"
+name = "awc"
+
+[dependencies]
+argparse = "0.2.2"
+alienware_api = { path = "../alienware_api", version = "0.1.0"}
+json = "0.12.4"
+regex = "1.5.4"
+lazy_static = "1.4.0"
