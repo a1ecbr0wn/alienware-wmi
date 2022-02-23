@@ -1,6 +1,6 @@
-# alienware-wmi
+# alienware-api
 
-[![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/workflows/CI/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions)
+[![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml)
 
 The `alienware-api` crate provides a Rust API access to the Linux sysfs platform
 api for control of the lights on an Alienware Alpha desktop machine.  The API
