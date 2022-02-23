@@ -3,7 +3,8 @@ name: CI Build
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
+      - 'feature/*'
     paths-ignore:
       - '*.md'
   pull_request:
