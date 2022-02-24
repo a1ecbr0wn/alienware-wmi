@@ -2,7 +2,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fmt;
-use std::fs::{metadata, File};
+use std::fs::File;
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
 

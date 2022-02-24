@@ -212,9 +212,9 @@ fn parse_rgb_string(input: &str) -> (u8, u8, u8) {
             match RE.captures(input.as_str()) {
                 Some(caps) => {
                     if caps.len() == 4 {
-                        let red = caps.get(1).unwrap().as_str().to_string();
-                        let green = caps.get(2).unwrap().as_str().to_string();
-                        let blue = caps.get(3).unwrap().as_str().to_string();
+                        let red = &caps[1];
+                        let green = &caps[2];
+                        let blue = &caps[3];
                         (
                             red.parse::<u8>().unwrap(),
                             green.parse::<u8>().unwrap(),
@@ -224,7 +224,7 @@ fn parse_rgb_string(input: &str) -> (u8, u8, u8) {
                         (0u8, 0u8, 15u8) // setting blue as the default
                     }
                 }
-                None => (0u8, 0u8, 15u8), // setting blue as the default
+                _ => (0u8, 0u8, 15u8), // setting blue as the default
             }
         }
     }
