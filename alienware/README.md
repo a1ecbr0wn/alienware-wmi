@@ -28,4 +28,4 @@ use alienware;
 
 If you use this software, you use it ON YOUR OWN RISK.
 
-This software is licenced under the [Apache-2.0](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENCE) licence.
+This software is licenced under the [Apache-2.0](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) licence.
