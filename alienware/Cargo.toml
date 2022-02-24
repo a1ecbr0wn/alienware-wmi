@@ -7,6 +7,7 @@ description = "API to control the lights on an Alienware Alpha R1/R2"
 license = "Apache-2.0"
 repository = "https://github.com/a1ecbr0wn/alienware-wmi/tree/main/alienware"
 homepage = "https://github.com/a1ecbr0wn/alienware-wmi"
+documentation = "https://docs.rs/alienware"
 readme = "README.md"
 keywords = ["alienware", "sysfs", "led"]
 categories = ["api-bindings", "hardware-support", "os::linux-apis"]

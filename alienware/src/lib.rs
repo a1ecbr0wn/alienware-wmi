@@ -281,7 +281,7 @@ impl Alienware {
         hdmi.exists
     }
 
-    /// Checks whether the alsienware LED setup is available
+    /// Checks whether the alienware LED setup is available
     pub fn has_rgb_zones(self) -> bool {
         let rgb_zones = self.get_rgb_zones();
         rgb_zones.exists
