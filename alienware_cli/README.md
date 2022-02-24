@@ -1,6 +1,6 @@
 # alienware-cli
 
-[![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml) ![Crates.io](https://img.shields.io/crates/v/alienware_cli)
+[![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml) [![Crates.io](https://img.shields.io/crates/v/alienware_cli)](https://crates.io/crates/alienware)
 
 The `alienware-cli` crate uses the `alienware` Rust API crate to provide CLI access to the Linux sysfs platform api for
 control of the lights on an Alienware Alpha desktop machine.  The API is based on the `alienware_wmi_control.sh` script
