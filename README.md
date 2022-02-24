@@ -13,6 +13,7 @@ You might also want to check out a python project to control the same lights
 
 ## Disclaimer and License
 
-If you use this software, you use it ON YOUR OWN RISK.
+If you use this software, you use it AT YOUR OWN RISK.
 
 This software is licenced under the [Apache-2.0](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) licence.
+

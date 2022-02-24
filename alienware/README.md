@@ -26,6 +26,7 @@ use alienware;
 
 ## Disclaimer and License
 
-If you use this software, you use it ON YOUR OWN RISK.
+If you use this software, you use it AT YOUR OWN RISK.
 
 This software is licenced under the [Apache-2.0](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) licence.
+

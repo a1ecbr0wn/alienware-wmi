@@ -11,7 +11,15 @@ You might also want to check out a python project to control the same lights
 
 ## Install/Use
 
-To use `alienware-cli`, first add this to your `Cargo.toml`:
+To use `alienware-cli`, first install it.
+
+If cargo is available to your root user with a correct toolchain:
+
+```bash
+$ sudo cargo install alienware_cli --root /usr/local
+```
+
+Alternatively install for yourself and then copy to a location that is in all users path:
 
 ```bash
 $ cargo install alienware-cli
@@ -81,6 +89,6 @@ $ sudo awc -H "0 15 15"
 
 ## Disclaimer and License
 
-If you use this software, you use it ON YOUR OWN RISK.
+If you use this software, you use it AT YOUR OWN RISK.
 
 This software is licenced under the [Apache-2.0](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) licence.
