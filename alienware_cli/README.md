@@ -14,7 +14,8 @@ You might also want to check out a python project to control the same lights
 To use `alienware-cli`, first add this to your `Cargo.toml`:
 
 ```bash
-cargo install alienware-cli
+$ cargo install alienware-cli
+$ sudo cp ~/.cargo/bin/awc /usr/local/bin
 ```
 
 To see a description of the command line parameters use the `-h` parameter:
@@ -71,11 +72,11 @@ should be run with root permissions:
 Both of the following examples sets the head button to cyan:
 
 ```bash
-sudo awc -H cyan
+$ sudo awc -H cyan
 ```
 
 ```bash
-sudo awc -H "0 15 15"
+$ sudo awc -H "0 15 15"
 ```
 
 ## Disclaimer and License
