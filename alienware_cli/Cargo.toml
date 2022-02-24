@@ -3,8 +3,13 @@ name = "alienware_cli"
 version = "0.1.0"
 edition = "2021"
 authors = ["Alec Brown <alec@noser.net>"]
-description = "Command Line app to control the lights on an Alienware Alpha R2"
+description = "Command Line app to control the lights on an Alienware Alpha R1/R2"
 license = "Apache-2.0"
+repository = "https://github.com/a1ecbr0wn/alienware-wmi/tree/main/alienware_cli"
+homepage = "https://github.com/a1ecbr0wn/alienware-wmi"
+readme = "README.md"
+keywords = ["alienware", "sysfs", "led"]
+categories = ["command-line-utilities", "hardware-support"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
