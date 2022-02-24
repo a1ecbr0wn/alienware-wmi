@@ -1,12 +1,10 @@
-extern crate core;
-
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fmt;
 use std::fs::{metadata, File};
 use std::io::prelude::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// The possible sources of the HDMI output port
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -141,9 +139,7 @@ impl Alienware {
 
     /// Check that this is an Alienware server (i.e. has the alienware platform settings in sysfs)
     pub fn is_alienware(&self) -> bool {
-        let mut path_buf = PathBuf::new();
-        path_buf.push(&self.platform);
-        return metadata(path_buf.as_path()).is_ok();
+        Path::new(&self.platform).exists()
     }
 
     /// Get the state of the HDMI ports
@@ -156,7 +152,8 @@ impl Alienware {
             let mut path_buf = PathBuf::new();
             path_buf.push(&self.platform);
             path_buf.push("hdmi");
-            if metadata(path_buf.as_path()).is_ok() {
+
+            if path_buf.exists() {
                 source = self.parse_source();
                 cable_state = self.parse_cable_state();
             }
@@ -222,25 +219,27 @@ impl Alienware {
             let mut path_buf = PathBuf::new();
             path_buf.push(&self.platform);
             path_buf.push("rgb_zones");
-            if metadata(path_buf.as_path()).is_ok() {
+            if path_buf.exists() {
                 path_buf.push("zone00");
-                if metadata(path_buf.as_path()).is_ok() {
+                if path_buf.exists() {
                     zones.insert(
                         Zone::Head,
                         self.parse_rgb_zone(Zone::Head, "rgb_zones/zone00"),
                     );
                 }
+
                 path_buf.pop();
                 path_buf.push("zone01");
-                if metadata(path_buf.as_path()).is_ok() {
+                if path_buf.exists() {
                     zones.insert(
                         Zone::Left,
                         self.parse_rgb_zone(Zone::Left, "rgb_zones/zone01"),
                     );
                 }
+
                 path_buf.pop();
                 path_buf.push("zone02");
-                if metadata(path_buf.as_path()).is_ok() {
+                if path_buf.exists() {
                     zones.insert(
                         Zone::Right,
                         self.parse_rgb_zone(Zone::Right, "rgb_zones/zone02"),
@@ -301,7 +300,7 @@ impl Alienware {
         file.read_to_string(&mut contents).unwrap();
         let caps = RE.captures(contents.as_str()).unwrap();
         match caps.len() > 0 {
-            true => Some(caps.get(1).unwrap().as_str().to_string()),
+            true => Some(caps[1].to_string()),
             false => None,
         }
     }
@@ -314,25 +313,21 @@ impl Alienware {
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
-        let mut file = File::open(path_buf.as_path()).unwrap();
+        let mut file = File::open(path_buf).unwrap();
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
         match RE.captures(contents.as_str()) {
-            Some(caps) => {
-                if caps.len() == 4 {
-                    let red = caps.get(1).unwrap().as_str().to_string();
-                    let green = caps.get(2).unwrap().as_str().to_string();
-                    let blue = caps.get(3).unwrap().as_str().to_string();
-                    (
-                        red.parse::<u8>().unwrap(),
-                        green.parse::<u8>().unwrap(),
-                        blue.parse::<u8>().unwrap(),
-                    )
-                } else {
-                    (0u8, 0u8, 0u8)
-                }
+            Some(caps) if caps.len() == 4 => {
+                let red = &caps[1];
+                let green = &caps[2];
+                let blue = &caps[3];
+                (
+                    red.parse::<u8>().unwrap(),
+                    green.parse::<u8>().unwrap(),
+                    blue.parse::<u8>().unwrap(),
+                )
             }
-            None => (0u8, 0u8, 0u8),
+            _ => (0u8, 0u8, 0u8),
         }
     }
 
@@ -341,7 +336,7 @@ impl Alienware {
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
-        let mut sys_file = File::create(path_buf.as_path())?;
+        let mut sys_file = File::create(path_buf)?;
         sys_file.write_all(value.as_bytes())?;
         Ok(())
     }
@@ -458,7 +453,7 @@ mod tests {
         let mut path_buf = PathBuf::new();
         path_buf.push(TEST_PATH);
         path_buf.push(test);
-        if metadata(path_buf.as_path()).is_ok() {
+        if path_buf.exists() {
             if remove_dir_all(path_buf.as_path()).is_err() {
                 panic!("Failed to remove test path while setting up not_aw scenario")
             };
