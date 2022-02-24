@@ -14,7 +14,7 @@ name = "awc"
 
 [dependencies]
 argparse = "0.2.2"
-alienware_api = { path = "../alienware_api", version = "0.1.0"}
+alienware = { path = "../alienware", version = "0.1.0"}
 json = "0.12.4"
 regex = "1.5.4"
 lazy_static = "1.4.0"

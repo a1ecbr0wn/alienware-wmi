@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "alienware_api",
+    "alienware",
     "alienware_cli",
 ]

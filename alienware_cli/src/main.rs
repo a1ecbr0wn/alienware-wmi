@@ -1,4 +1,4 @@
-use alienware_api::{Alienware, Zone};
+use alienware::{Alienware, Zone};
 use argparse::{ArgumentParser, Store, StoreTrue};
 use json::object;
 use lazy_static::lazy_static;
@@ -8,6 +8,7 @@ use std::process::exit;
 
 /// Struct containing the parsed command line arguments
 struct Options {
+    show_version: bool,
     json: bool,
     hdmi_connector: bool,
     led_state: bool,
@@ -17,10 +18,13 @@ struct Options {
 }
 
 // Parse the command line arguments
-fn parse_arguments(options: &mut Options) {
+fn parse_arguments(description: &str, options: &mut Options) {
     let mut parser = ArgumentParser::new();
-    parser.set_description(
-        "awc: Alienware CLI: Command Line app to control the lights on an Alienware Alpha R2",
+    parser.set_description(description);
+    parser.refer(&mut options.show_version).add_option(
+        &["-v", "--version"],
+        StoreTrue,
+        "Get version info",
     );
     parser.refer(&mut options.json).add_option(
         &["-j", "--json"],
@@ -62,6 +66,7 @@ fn parse_arguments(options: &mut Options) {
 
 fn main() {
     let mut options = Options {
+        show_version: false,
         json: false,
         hdmi_connector: false,
         led_state: false,
@@ -69,7 +74,19 @@ fn main() {
         left: "".to_string(),
         right: "".to_string(),
     };
-    parse_arguments(&mut options);
+    lazy_static! {
+        static ref DESCRIPTION: String = format!(
+            "awc v{}: Command Line app to control the lights on an Alienware Alpha R1/R2",
+            env!("CARGO_PKG_VERSION")
+        );
+    }
+
+    parse_arguments(DESCRIPTION.as_str(), &mut options);
+
+    if options.show_version {
+        println!("{}", DESCRIPTION.as_str());
+        exit(0);
+    }
 
     let aw = Alienware::new();
     let mut json_data = object! {};
