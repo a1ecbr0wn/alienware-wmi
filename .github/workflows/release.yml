@@ -42,7 +42,15 @@ jobs:
           command: test
           args: --target=${{ matrix.TARGET }}
 
-      - name: "Create Release"
+      - name: "Publish API to crates.io"
+        env:
+          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: -p alienware
+
+      - name: "Create CLI Release"
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           automatic_release_tag: "latest"
@@ -52,14 +60,6 @@ jobs:
           files: |
             LICENSE
             target/release/awc
-      
-      - name: "Publish API to crates.io"
-        env:
-          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
-          args: -p alienware
 
       - name: "Publish CLI to crates.io"
         env:

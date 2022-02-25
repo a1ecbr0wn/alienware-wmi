@@ -33,7 +33,7 @@ $ awc -h
 Usage:
   awc [OPTIONS]
 
-awc v0.1.3: Command Line app to control the lights on an Alienware Alpha R1/R2
+awc v0.1.4: Command Line app to control the lights on an Alienware Alpha R1/R2
 
 Optional arguments:
   -h,--help             Show this help message and exit
