@@ -45,7 +45,8 @@ jobs:
       - name: "Create Release"
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          automatic_release_tag: "${{ GITHUB_REF_NAME }}"
+          automatic_release_tag: "latest"
+          title: "Release ${GITHUB_REF/refs\/tags\//}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
