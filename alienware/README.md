@@ -11,14 +11,14 @@ You might also want to check out a python project to control the same lights
 
 ## Install/Use
 
-To use `alienware`, first add this to your `Cargo.toml`:
+To use the `alienware` api, first add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-alienware = "0.1.4"
+alienware = "1.0.0"
 ```
 
-Then, add this to your crate root:
+and then, add this to your crate root:
 
 ```rust
 use alienware;

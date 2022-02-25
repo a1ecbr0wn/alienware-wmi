@@ -9,22 +9,28 @@ that used to come with the SteamOS distribution of Linux for Alienware machines.
 You might also want to check out a python project to control the same lights
 [`AlienFX`](https://github.com/trackmastersteve/alienfx).
 
-## Install/Use
+## Install
 
-To use `alienware-cli`, first install it.
-
-If cargo is available to your root user with a correct toolchain:
+First method: if cargo is available to your root user with a correct toolchain:
 
 ```bash
-$ sudo cargo install alienware_cli --root /usr/local
+sudo cargo install alienware_cli --root /usr/local
 ```
 
-Alternatively install for yourself and then copy to a location that is in all users path:
+Second method: install for yourself using cargo and then copy to a location that is in all users path:
 
 ```bash
-$ cargo install alienware-cli
-$ sudo cp ~/.cargo/bin/awc /usr/local/bin
+cargo install alienware-cli
+sudo cp ~/.cargo/bin/awc /usr/local/bin
 ```
+
+Third method: grab the latest version from the [releases](https://github.com/a1ecbr0wn/alienware-wmi/releases) page:
+
+```bash
+curl -OL https://github.com/a1ecbr0wn/alienware-wmi/releases/download/latest/awc && chmod 775 awc
+```
+
+## Use
 
 To see a description of the command line parameters use the `-h` parameter:
 
@@ -33,7 +39,7 @@ $ awc -h
 Usage:
   awc [OPTIONS]
 
-awc v0.1.4: Command Line app to control the lights on an Alienware Alpha R1/R2
+awc v1.0.0: Command Line app to control the lights on an Alienware Alpha R1/R2
 
 Optional arguments:
   -h,--help             Show this help message and exit
@@ -80,11 +86,11 @@ should be run with root permissions:
 Both of the following examples sets the head button to cyan:
 
 ```bash
-$ sudo awc -H cyan
+sudo awc -H cyan
 ```
 
 ```bash
-$ sudo awc -H "0 15 15"
+sudo awc -H "0 15 15"
 ```
 
 ## Disclaimer and License
