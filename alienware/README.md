@@ -15,7 +15,7 @@ To use `alienware`, first add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-alienware = "0.1.2"
+alienware = "0.1.3"
 ```
 
 Then, add this to your crate root:
