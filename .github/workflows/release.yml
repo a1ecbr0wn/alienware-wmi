@@ -1,5 +1,5 @@
 ---
-name: "tagged-release"
+name: "Tag Release Build"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   tag-release:
-    name: "Tag Release"
+    name: "Tag Release Build"
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
@@ -42,12 +42,28 @@ jobs:
           command: test
           args: --target=${{ matrix.TARGET }}
 
-      - name: "Release"
+      - name: "Create Release"
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          automatic_release_tag: "latest"
+          automatic_release_tag: "${{ GITHUB_REF_NAME }}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
             LICENSE
             target/release/awc
+      
+      - name: "Publish API to crates.io"
+        env:
+          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: -p alienware
+
+      - name: "Publish CLI to crates.io"
+        env:
+          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: -p alienware_cli
