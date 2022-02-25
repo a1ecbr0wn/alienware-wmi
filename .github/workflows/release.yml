@@ -61,6 +61,10 @@ jobs:
             LICENSE
             target/release/awc
 
+      - name: Sleep for 10 seconds so that crates.io can update it's references to alienware
+        run: sleep 10s
+        shell: bash
+
       - name: "Publish CLI to crates.io"
         env:
           CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
