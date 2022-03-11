@@ -186,7 +186,7 @@ fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
                 }
             };
         } else {
-            println!("There are no {} LEDs", zone);
+            println!("There are no {zone} LEDs");
         }
     } else {
         println!("There is no alienware LED unit on this machine");

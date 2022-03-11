@@ -252,7 +252,7 @@ impl Alienware {
 
     /// Set an LED colour
     pub fn set_rgb_zone(&self, zone: Zone, red: u8, green: u8, blue: u8) -> std::io::Result<()> {
-        let rgb = format!("{:02x}{:02x}{:02x}", red, green, blue);
+        let rgb = format!("{red:02x}{green:02x}{blue:02x}");
         self.write_sys_file(
             match zone {
                 Zone::Head => "rgb_zones/zone00",
@@ -347,7 +347,7 @@ mod tests {
     use crate::{HDMISource, Zone};
     use std::fs::{create_dir_all, metadata, remove_dir_all, File};
     use std::io::prelude::*;
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
 
     #[test]
     fn is_alienware() {
@@ -395,19 +395,18 @@ mod tests {
 
     #[test]
     fn set_rgb_zones() {
-        let alienware = crate::Alienware::test(setup_aw("get_rgb_zones"));
-        match alienware.set_rgb_zone(Zone::Left, 15, 15, 15) {
+        let alienware = crate::Alienware::test(setup_aw("set_rgb_zones"));
+        match alienware.set_rgb_zone(Zone::Left, 15, 7, 0) {
             Err(_) => {
                 panic!("Failed to set the RGB Zone");
             }
             Ok(()) => {
-                let path = "/tmp/alienware_wmi_test/set_rgb_zones/rgb_zones/zone01";
-                if metadata(path).is_ok() {
-                    let mut file = File::open(path).unwrap();
-                    let mut contents = String::new();
-                    file.read_to_string(&mut contents).unwrap();
-                    assert_eq!("0f0f0f", contents);
-                }
+                let path = Path::new("/tmp/alienware_wmi_test/set_rgb_zones/alienware-wmi/rgb_zones/zone01");
+                assert!(path.exists());
+                let mut file = File::open(path).unwrap();
+                let mut contents = String::new();
+                file.read_to_string(&mut contents).unwrap();
+                assert_eq!("0f0700", contents);
             }
         }
     }
