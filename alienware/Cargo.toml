@@ -1,6 +1,6 @@
 [package]
 name = "alienware"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"
 authors = ["Alec Brown <alec@noser.net>"]
 description = "API to control the lights on an Alienware Alpha R1/R2"
@@ -16,5 +16,5 @@ rust-version = "1.58"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-regex = "1.5.4"
+regex = "1.5.5"
 lazy_static = "1.4.0"
