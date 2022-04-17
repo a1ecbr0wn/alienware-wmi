@@ -401,7 +401,9 @@ mod tests {
                 panic!("Failed to set the RGB Zone");
             }
             Ok(()) => {
-                let path = Path::new("/tmp/alienware_wmi_test/set_rgb_zones/alienware-wmi/rgb_zones/zone01");
+                let path = Path::new(
+                    "/tmp/alienware_wmi_test/set_rgb_zones/alienware-wmi/rgb_zones/zone01",
+                );
                 assert!(path.exists());
                 let mut file = File::open(path).unwrap();
                 let mut contents = String::new();
