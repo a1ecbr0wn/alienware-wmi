@@ -353,21 +353,21 @@ mod tests {
     fn is_alienware() {
         let alienware = crate::Alienware::test(setup_aw("is_alienware"));
         let rtn = alienware.is_alienware();
-        assert_eq!(rtn, true);
+        assert!(rtn);
     }
 
     #[test]
     fn is_not_alienware() {
         let alienware = crate::Alienware::test(setup_not_aw("is_not_alienware"));
         let rtn = alienware.is_alienware();
-        assert_eq!(rtn, false);
+        assert!(rtn);
     }
 
     #[test]
     fn has_rgb_zones() {
         let alienware = crate::Alienware::test(setup_aw("has_rgb_zones"));
         let rtn = alienware.has_rgb_zones();
-        assert_eq!(rtn, true);
+        assert!(rtn);
     }
 
     #[test]
@@ -417,14 +417,14 @@ mod tests {
     fn has_hdmi() {
         let alienware = crate::Alienware::test(setup_aw("has_hdmi"));
         let rtn = alienware.has_hdmi();
-        assert_eq!(rtn, true);
+        assert!(rtn);
     }
 
     #[test]
     fn get_hdmi() {
         let alienware = crate::Alienware::test(setup_aw("get_hdmi"));
         let rtn = alienware.get_hdmi();
-        assert_eq!(rtn.exists, true);
+        assert!(rtn.exists);
         assert_eq!(rtn.source, crate::HDMISource::Gpu);
         assert_eq!(rtn.cable_state, crate::HDMICableState::Connected);
     }
@@ -448,16 +448,14 @@ mod tests {
         }
     }
 
-    const TEST_PATH: &'static str = "/tmp/alienware_wmi_test";
+    const TEST_PATH: &str = "/tmp/alienware_wmi_test";
 
     fn setup_not_aw(test: &str) -> String {
         let mut path_buf = PathBuf::new();
         path_buf.push(TEST_PATH);
         path_buf.push(test);
-        if path_buf.exists() {
-            if remove_dir_all(path_buf.as_path()).is_err() {
-                panic!("Failed to remove test path while setting up not_aw scenario")
-            };
+        if path_buf.exists() && remove_dir_all(path_buf.as_path()).is_err() {
+            panic!("Failed to remove test path while setting up not_aw scenario")
         }
         if create_dir_all(path_buf.as_path()).is_err() {
             panic!("Failed to setup test path while setting up not_aw scenario")
@@ -472,10 +470,8 @@ mod tests {
         let mut path_buf = PathBuf::new();
         path_buf.push(TEST_PATH);
         path_buf.push(test);
-        if metadata(path_buf.as_path()).is_ok() {
-            if remove_dir_all(path_buf.as_path()).is_err() {
-                panic!("Failed to remove test path while setting up aw scenario")
-            };
+        if metadata(path_buf.as_path()).is_ok() && remove_dir_all(path_buf.as_path()).is_err() {
+            panic!("Failed to remove test path while setting up aw scenario")
         }
         path_buf.push("alienware-wmi");
         if create_dir_all(path_buf.as_path()).is_err() {
