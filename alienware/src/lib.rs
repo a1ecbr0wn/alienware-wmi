@@ -360,7 +360,7 @@ mod tests {
     fn is_not_alienware() {
         let alienware = crate::Alienware::test(setup_not_aw("is_not_alienware"));
         let rtn = alienware.is_alienware();
-        assert!(rtn);
+        assert!(!rtn);
     }
 
     #[test]
