@@ -46,6 +46,11 @@ jobs:
     name: "Release Lib to crates.io"
     runs-on: ubuntu-latest
     needs: [tag-release]
+    strategy:
+      matrix:
+        RUST: [stable]
+        TARGET:
+          - x86_64-unknown-linux-gnu
 
     steps:
       - name: "Checkout"
@@ -86,6 +91,11 @@ jobs:
     name: "Release CLI to crates.io"
     runs-on: ubuntu-latest
     needs: [release-lib]
+    strategy:
+      matrix:
+        RUST: [stable]
+        TARGET:
+          - x86_64-unknown-linux-gnu
 
     steps:
       - name: "Checkout"
