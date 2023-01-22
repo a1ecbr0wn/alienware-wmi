@@ -21,11 +21,11 @@ architectures:
     run-on: amd64
 
 parts:
-  rust-example:
+ awc:
     plugin: rust
     source: https://github.com/a1ecbr0wn/alienware-wmi/archive/refs/tags/:snap_version.tar.gz
     rust-path: ["alienware_cli"]
 
 apps:
-  rust-example:
+  awc:
     command: bin/awc
