@@ -13,6 +13,7 @@ grade: stable
 confinement: strict
 issues: https://github.com/a1ecbr0wn/alienware-wmi/issues
 website: https://github.com/a1ecbr0wn/alienware-wmi/tree/main/alienware_cli
+icon: img/appicon-512.png
 license: Apache-2.0
 
 parts:
