@@ -1,0 +1,32 @@
+title: Alienware CLI
+name: alienware-cli
+type: app
+base: core20
+version: ':snap_version'
+summary: Snapcraft Rust Example
+description: |
+  Snapcraft example application built with the rust snapcraft crate that shows output from some of the crate's features.
+
+  This is an example application for a Rust crate that provides access to some of the snapcraft environment.
+  The application is an displays the values of a number of environment variables 
+  (see: https://snapcraft.io/docs/environment-variables ) that your Snap exposes to all contained applications, and is
+  an example of how you can add additional functionality and context if your application has be deployed via Snap.
+
+  For more information on the API, see the crate at crates.io (see: https://crates.io/crates/snapcraft ) and 
+  docs.rs (see: https://docs.rs/snapcraft/latest/snapcraft/ ).
+
+grade: stable
+confinement: strict
+issues: https://github.com/a1ecbr0wn/snapcraft/issues
+website: https://github.com/a1ecbr0wn/snapcraft
+license: Apache-2.0
+
+parts:
+  rust-example:
+    plugin: rust
+    source: https://github.com/a1ecbr0wn/snapcraft/archive/refs/tags/:snap_version.tar.gz
+    rust-path: ["alienware_cli"]
+
+apps:
+  rust-example:
+    command: bin/alienware-cli

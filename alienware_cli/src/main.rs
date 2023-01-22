@@ -1,79 +1,14 @@
+mod cli;
+
 use alienware::{Alienware, Zone};
-use argparse::{ArgumentParser, Store, StoreTrue};
+use clap::Parser;
 use json::object;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::io::ErrorKind;
 use std::process::exit;
 
-/// Struct containing the parsed command line arguments
-struct Options {
-    show_version: bool,
-    json: bool,
-    hdmi_connector: bool,
-    led_state: bool,
-    head: String,
-    left: String,
-    right: String,
-}
-
-// Parse the command line arguments
-fn parse_arguments(description: &str, options: &mut Options) {
-    let mut parser = ArgumentParser::new();
-    parser.set_description(description);
-    parser.refer(&mut options.show_version).add_option(
-        &["-v", "--version"],
-        StoreTrue,
-        "Get version info",
-    );
-    parser.refer(&mut options.json).add_option(
-        &["-j", "--json"],
-        StoreTrue,
-        "Output in JSON format for machine readability",
-    );
-    parser.refer(&mut options.hdmi_connector).add_option(
-        &["-c", "--connector"],
-        StoreTrue,
-        "State of the HDMI ports",
-    );
-    parser.refer(&mut options.led_state).add_option(
-        &["-l", "--led-state"],
-        StoreTrue,
-        "State of the LEDs",
-    );
-    parser.refer(&mut options.head).add_option(
-        &["-H", "--head"],
-        Store,
-        "Set the LED state of the head button",
-    );
-    parser.refer(&mut options.left).add_option(
-        &["-L", "--left"],
-        Store,
-        "Set the LED state of the left LEDs",
-    );
-    parser.refer(&mut options.right).add_option(
-        &["-R", "--right"],
-        Store,
-        "Set the LED state of the right LEDs",
-    );
-    match parser.parse_args() {
-        Ok(()) => {}
-        Err(x) => {
-            exit(x);
-        }
-    }
-}
-
 fn main() {
-    let mut options = Options {
-        show_version: false,
-        json: false,
-        hdmi_connector: false,
-        led_state: false,
-        head: "".to_string(),
-        left: "".to_string(),
-        right: "".to_string(),
-    };
     lazy_static! {
         static ref DESCRIPTION: String = format!(
             "awc v{}: Command Line app to control the lights on an Alienware Alpha R1/R2",
@@ -81,9 +16,10 @@ fn main() {
         );
     }
 
-    parse_arguments(DESCRIPTION.as_str(), &mut options);
+    let options = cli::Options::parse();
+    // parse_arguments(DESCRIPTION.as_str(), &mut options);
 
-    if options.show_version {
+    if options.version {
         println!("{}", DESCRIPTION.as_str());
         exit(0);
     }
@@ -91,7 +27,7 @@ fn main() {
     let aw = Alienware::new();
     let mut json_data = object! {};
 
-    if options.hdmi_connector {
+    if options.connector {
         let hdmi = aw.get_hdmi();
         if options.json {
             let hdmi_data = object! {
@@ -153,16 +89,16 @@ fn main() {
         println!("{}", json_data.dump());
     }
 
-    if !options.head.is_empty() {
-        set_led_zone_rgb(&aw, Zone::Head, options.head);
+    if let Some(head) = options.head {
+        set_led_zone_rgb(&aw, Zone::Head, head);
     }
 
-    if !options.left.is_empty() {
-        set_led_zone_rgb(&aw, Zone::Left, options.left);
+    if let Some(left) = options.left {
+        set_led_zone_rgb(&aw, Zone::Left, left);
     }
 
-    if !options.right.is_empty() {
-        set_led_zone_rgb(&aw, Zone::Right, options.right);
+    if let Some(right) = options.right {
+        set_led_zone_rgb(&aw, Zone::Right, right);
     }
 }
 

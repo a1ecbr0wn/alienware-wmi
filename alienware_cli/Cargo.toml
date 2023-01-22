@@ -1,6 +1,6 @@
 [package]
 name = "alienware_cli"
-version = "1.0.2"
+version = "1.0.3"
 edition = "2021"
 authors = ["Alec Brown <alec@noser.net>"]
 description = "Command Line app to control the lights on an Alienware Alpha R1/R2"
@@ -19,8 +19,8 @@ path = "src/main.rs"
 name = "awc"
 
 [dependencies]
-argparse = "0.2.2"
 alienware = { path = "../alienware", version = "1.0.1"}
+clap = { version = "4.0", features = ["derive"] }
 json = "0.12.4"
 regex = "1.5.5"
 lazy_static = "1.4.0"

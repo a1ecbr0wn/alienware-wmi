@@ -34,7 +34,7 @@ curl -OL https://github.com/a1ecbr0wn/alienware-wmi/releases/download/latest/awc
 
 To see a description of the command line parameters use the `-h` parameter:
 
-```bash
+``` bash
 $ awc -h
 Usage:
   awc [OPTIONS]
