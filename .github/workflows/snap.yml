@@ -18,7 +18,7 @@ jobs:
         run: |
           input_version="${{ github.event.inputs.snap_version }}"
           if [ "${#input_version}" -eq "0" ]; then
-            echo "snap_version=v0.2.2" >> $GITHUB_ENV
+            echo "snap_version=v0.0.1" >> $GITHUB_ENV
           else
             echo "snap_version=$input_version" >> $GITHUB_ENV
           fi

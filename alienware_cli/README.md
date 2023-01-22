@@ -2,9 +2,9 @@
 
  [![Crates.io](https://img.shields.io/crates/l/alienware_cli)](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) [![Crates.io](https://img.shields.io/crates/v/alienware_cli)](https://crates.io/crates/alienware_cli) [![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml)
 
-The `alienware-cli` crate uses the `alienware` Rust API crate to provide CLI access to the Linux sysfs platform api for
-control of the lights on an Alienware Alpha desktop machine.  The API is based on the `alienware_wmi_control.sh` script
-that used to come with the SteamOS distribution of Linux for Alienware machines.
+The `alienware-cli` application controls the LEDs and the HDMI in and out ports on an Alienware Alpha desktop machine.
+The API is based on the `alienware_wmi_control.sh` script that used to come with the SteamOS distribution of Linux for
+Alienware machines.
 
 You might also want to check out a python project to control the same lights
 [`AlienFX`](https://github.com/trackmastersteve/alienfx).
@@ -36,20 +36,19 @@ To see a description of the command line parameters use the `-h` parameter:
 
 ``` bash
 $ awc -h
-Usage:
-  awc [OPTIONS]
+Command Line app to control the lights on an Alienware Alpha R1/R2
 
-awc v1.0.1: Command Line app to control the lights on an Alienware Alpha R1/R2
+Usage: awc [OPTIONS]
 
-Optional arguments:
-  -h,--help             Show this help message and exit
-  -v,--version          Get version info
-  -j,--json             Output in JSON format for machine readability
-  -c,--connector        State of the HDMI ports
-  -l,--led-state        State of the LEDs
-  -H,--head HEAD        Set the LED state of the head button
-  -L,--left LEFT        Set the LED state of the left LEDs
-  -R,--right RIGHT      Set the LED state of the right LEDs
+Options:
+  -c, --connector      State of the HDMI ports
+  -l, --led-state      State of the LEDs
+  -H, --head <HEAD>    Set the LED state of the head button
+  -L, --left <LEFT>    Set the LED state of the left LEDs
+  -R, --right <RIGHT>  Set the LED state of the right LEDs
+  -j, --json           Output in JSON format for machine readability (combined with -c or -l)
+  -V, --version        Print version information
+  -h, --help           Print help
 ```
 
 The `-c` and `-l` parameters show information about the hdmi connections and LEDs respectively, this two parameters can
