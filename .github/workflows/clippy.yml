@@ -6,15 +6,16 @@
 # mistakes in your Rust code and help improve your Rust code.
 # More details at https://github.com/rust-lang/rust-clippy 
 # and https://rust-lang.github.io/rust-clippy/
-
+---
 name: rust-clippy analyze
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '**/snapcraft.yaml'
   schedule:
     - cron: '0 2 * * 1'
 

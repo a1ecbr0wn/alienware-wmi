@@ -7,12 +7,14 @@ on:
     paths-ignore:
       - '**/*.md'
       - 'LICENSE'
+      - '**/snapcraft.yaml'
   pull_request:
     branches:
       - '**'
     paths-ignore:
       - '**/*.md'
       - 'LICENSE'
+      - '**/snapcraft.yaml'      
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
