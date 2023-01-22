@@ -24,4 +24,4 @@ parts:
 
 apps:
   rust-example:
-    command: bin/alienware-cli
+    command: bin/awc
