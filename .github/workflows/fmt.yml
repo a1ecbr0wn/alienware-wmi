@@ -1,6 +1,14 @@
-on: push
-
+---
 name: rust-fmt
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '**/snapcraft.yaml'
 
 jobs:
   format:
