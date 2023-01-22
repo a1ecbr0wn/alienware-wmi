@@ -131,4 +131,4 @@ jobs:
           repo: a1ecbr0wn/alienware-wmi
           ref: refs/heads/main
           workflow: snap.yml
-          inputs: '{ "example_version": "${{ github.ref_name }}" }'
+          inputs: '{ "snap_version": "${{ github.ref_name }}" }'
