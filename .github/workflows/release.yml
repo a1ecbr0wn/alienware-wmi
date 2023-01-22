@@ -48,6 +48,12 @@ jobs:
     needs: [tag-release]
 
     steps:
+      - name: 
+        run: |
+          pwd
+          ls -al
+        shell: bash
+
       - name: "Publish API to crates.io"
         env:
           CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
