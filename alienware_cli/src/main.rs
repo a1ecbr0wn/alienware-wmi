@@ -31,36 +31,36 @@ fn main() {
         let hdmi = aw.get_hdmi();
         if let Ok(hdmi) = hdmi {
             if options.json {
-                let hdmi_data = object! {
-                    "hdmi": {
-                        "exists": hdmi.exists,
-                        "input": format!( "{}", hdmi.cable_state ),
-                        "output": format!( "{}", hdmi.source ),
-                    }
-                };
-                json_data.insert("hdmi", hdmi_data).unwrap();
+            let hdmi_data = object! {
+                "hdmi": {
+                    "exists": hdmi.exists,
+                    "input": format!( "{}", hdmi.cable_state ),
+                    "output": format!( "{}", hdmi.source ),
+                }
+            };
+            json_data.insert("hdmi", hdmi_data).unwrap();
+        } else {
+            print!("HDMI passthrough state: ");
+            if hdmi.exists {
+                println!("present");
+                println!("    Input HDMI is {}", hdmi.cable_state);
+                println!("    Output HDMI is connected to {}", hdmi.source);
             } else {
-                print!("HDMI passthrough state: ");
-                if hdmi.exists {
-                    println!("present");
-                    println!("    Input HDMI is {}", hdmi.cable_state);
-                    println!("    Output HDMI is connected to {}", hdmi.source);
-                } else {
-                    println!("not present");
-                }
-                println!();
+                println!("not present");
             }
-        } else if let Err(x) = hdmi {
-            match x.kind() {
-                ErrorKind::PermissionDenied => {
-                    println!("You do not have permission to run this command (do you need sudo?)")
-                }
-                _ => {
-                    println!("Problem getting HDMI state {:?} ", x.kind())
-                }
+            println!();
+        }
+    } else if let Err(x) = hdmi {
+        match x.kind() {
+            ErrorKind::PermissionDenied => {
+                println!("You do not have permission to run this command (do you need sudo?)")
+            }
+            _ => {
+                println!("Problem getting HDMI state {:?} ", x.kind())
             }
         }
     }
+}
 
     if options.led_state {
         let leds = aw.get_rgb_zones();
@@ -133,14 +133,16 @@ fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
                 let (r, g, b) = parse_rgb_string(input.as_str());
                 match aw.set_rgb_zone(zone, r, g, b) {
                     Ok(_) => {}
-                    Err(x) => match x.kind() {
-                        ErrorKind::PermissionDenied => {
-                            println!("You do not have permission to run this command (do you need sudo?)")
+                    Err(x) => {
+                        match x.kind() {
+                            ErrorKind::PermissionDenied => {
+                                println!("You do not have permission to run this command (do you need sudo?)")
+                            }
+                            _ => {
+                                println!("Problem setting RGB value {:?} ", x.kind())
+                            }
                         }
-                        _ => {
-                            println!("Problem setting RGB value {:?} ", x.kind())
-                        }
-                    },
+                    }
                 };
             } else {
                 println!("There are no {zone} LEDs");
