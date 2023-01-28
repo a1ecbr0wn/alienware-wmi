@@ -143,7 +143,7 @@ impl Alienware {
     }
 
     /// Get the state of the HDMI ports
-    pub fn get_hdmi(&self) -> HDMI {
+    pub fn get_hdmi(&self) -> std::io::Result<HDMI> {
         let mut source = HDMISource::Unknown;
         let mut cable_state = HDMICableState::Unknown;
         let mut exists = false;
@@ -154,46 +154,48 @@ impl Alienware {
             path_buf.push("hdmi");
 
             if path_buf.exists() {
-                source = self.parse_source();
-                cable_state = self.parse_cable_state();
+                source = self.parse_source()?;
+                cable_state = self.parse_cable_state()?;
             }
         }
-        HDMI {
+        Ok(HDMI {
             source,
             cable_state,
             exists,
-        }
+        })
     }
 
     /// Parse the state of the HDMI Output source
-    fn parse_source(&self) -> HDMISource {
+    fn parse_source(&self) -> std::io::Result<HDMISource> {
         match self.parse_sys_file("hdmi/source") {
-            Some(s) => {
+            Ok(Some(s)) => {
                 if s.eq("cable") {
-                    HDMISource::Cable
+                    Ok(HDMISource::Cable)
                 } else if s.eq("gpu") {
-                    HDMISource::Gpu
+                    Ok(HDMISource::Gpu)
                 } else {
-                    HDMISource::Unknown
+                    Ok(HDMISource::Unknown)
                 }
             }
-            None => HDMISource::Unknown,
+            Ok(None) => Ok(HDMISource::Unknown),
+            Err(x) => Err(x),
         }
     }
 
     /// Parse the state of the HDMI input cable
-    fn parse_cable_state(&self) -> HDMICableState {
+    fn parse_cable_state(&self) -> std::io::Result<HDMICableState> {
         match self.parse_sys_file("hdmi/cable") {
-            Some(s) => {
+            Ok(Some(s)) => {
                 if s.eq("connected") {
-                    HDMICableState::Connected
+                    Ok(HDMICableState::Connected)
                 } else if s.eq("unconnected") {
-                    HDMICableState::Unconnected
+                    Ok(HDMICableState::Unconnected)
                 } else {
-                    HDMICableState::Unknown
+                    Ok(HDMICableState::Unknown)
                 }
             }
-            None => HDMICableState::Unknown,
+            Ok(None) => Ok(HDMICableState::Unknown),
+            Err(x) => Err(x),
         }
     }
 
@@ -211,7 +213,7 @@ impl Alienware {
     }
 
     /// Get the state of the various LEDs
-    pub fn get_rgb_zones(&self) -> RGBZones {
+    pub fn get_rgb_zones(&self) -> std::io::Result<RGBZones> {
         let mut zones = HashMap::new();
         let mut exists = false;
         if self.is_alienware() {
@@ -224,7 +226,7 @@ impl Alienware {
                 if path_buf.exists() {
                     zones.insert(
                         Zone::Head,
-                        self.parse_rgb_zone(Zone::Head, "rgb_zones/zone00"),
+                        self.parse_rgb_zone(Zone::Head, "rgb_zones/zone00")?,
                     );
                 }
 
@@ -233,7 +235,7 @@ impl Alienware {
                 if path_buf.exists() {
                     zones.insert(
                         Zone::Left,
-                        self.parse_rgb_zone(Zone::Left, "rgb_zones/zone01"),
+                        self.parse_rgb_zone(Zone::Left, "rgb_zones/zone01")?,
                     );
                 }
 
@@ -242,12 +244,12 @@ impl Alienware {
                 if path_buf.exists() {
                     zones.insert(
                         Zone::Right,
-                        self.parse_rgb_zone(Zone::Right, "rgb_zones/zone02"),
+                        self.parse_rgb_zone(Zone::Right, "rgb_zones/zone02")?,
                     );
                 }
             }
         }
-        RGBZones { zones, exists }
+        Ok(RGBZones { zones, exists })
     }
 
     /// Set an LED colour
@@ -265,55 +267,63 @@ impl Alienware {
     }
 
     /// Parse the current colour of an LED
-    fn parse_rgb_zone(&self, zone: Zone, file_name: &str) -> RGBZone {
-        let (red, green, blue) = self.parse_sys_rgb_file(file_name);
-        RGBZone {
-            zone,
-            red,
-            green,
-            blue,
+    fn parse_rgb_zone(&self, zone: Zone, file_name: &str) -> std::io::Result<RGBZone> {
+        match self.parse_sys_rgb_file(file_name) {
+            Ok((red, green, blue)) => Ok(RGBZone {
+                zone,
+                red,
+                green,
+                blue,
+            }),
+            Err(x) => Err(x),
         }
     }
 
     /// Checks whether the alienware HDMI setup is available
     pub fn has_hdmi(self) -> bool {
-        let hdmi = self.get_hdmi();
-        hdmi.exists
+        if let Ok(hdmi) = self.get_hdmi() {
+            hdmi.exists
+        } else {
+            false
+        }
     }
 
     /// Checks whether the alienware LED setup is available
     pub fn has_rgb_zones(self) -> bool {
-        let rgb_zones = self.get_rgb_zones();
-        rgb_zones.exists
+        if let Ok(rgb_zones) = self.get_rgb_zones() {
+            rgb_zones.exists
+        } else {
+            false
+        }
     }
 
     /// Parses a single setting sysfs file
-    fn parse_sys_file(&self, file_name: &str) -> Option<String> {
+    fn parse_sys_file(&self, file_name: &str) -> std::io::Result<Option<String>> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r"\[([^)]+)\]").unwrap();
         }
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
-        let mut file = File::open(path_buf.as_path()).unwrap();
+        let mut file = File::open(path_buf.as_path())?;
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
         let caps = RE.captures(contents.as_str()).unwrap();
         match caps.len() > 0 {
-            true => Some(caps[1].to_string()),
-            false => None,
+            true => Ok(Some(caps[1].to_string())),
+            false => Ok(None),
         }
     }
 
     /// Parses a sysfs file that holds an RGB setting
-    fn parse_sys_rgb_file(&self, file_name: &str) -> (u8, u8, u8) {
+    fn parse_sys_rgb_file(&self, file_name: &str) -> std::io::Result<(u8, u8, u8)> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r"^red: (\d+), green: (\d+), blue: (\d+)").unwrap();
         }
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
-        let mut file = File::open(path_buf).unwrap();
+        let mut file = File::open(path_buf)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
         match RE.captures(contents.as_str()) {
@@ -321,13 +331,13 @@ impl Alienware {
                 let red = &caps[1];
                 let green = &caps[2];
                 let blue = &caps[3];
-                (
+                Ok((
                     red.parse::<u8>().unwrap(),
                     green.parse::<u8>().unwrap(),
                     blue.parse::<u8>().unwrap(),
-                )
+                ))
             }
-            _ => (0u8, 0u8, 0u8),
+            _ => Ok((0u8, 0u8, 0u8)),
         }
     }
 
@@ -373,24 +383,26 @@ mod tests {
     #[test]
     fn get_rgb_zones() {
         let alienware = crate::Alienware::test(setup_aw("get_rgb_zones"));
-        let rtn = alienware.get_rgb_zones();
-
-        assert_eq!(rtn.zones.len(), 3);
-        let head = rtn.zones.get(&crate::Zone::Head).unwrap();
-        assert_eq!(head.zone, crate::Zone::Head);
-        assert_eq!(head.red, 0u8);
-        assert_eq!(head.green, 0u8);
-        assert_eq!(head.blue, 15u8);
-        let left = rtn.zones.get(&crate::Zone::Left).unwrap();
-        assert_eq!(left.zone, crate::Zone::Left);
-        assert_eq!(left.red, 0u8);
-        assert_eq!(left.green, 15u8);
-        assert_eq!(left.blue, 0u8);
-        let right = rtn.zones.get(&crate::Zone::Right).unwrap();
-        assert_eq!(right.zone, crate::Zone::Right);
-        assert_eq!(right.red, 15u8);
-        assert_eq!(right.green, 0u8);
-        assert_eq!(right.blue, 0u8);
+        let rgbzone = alienware.get_rgb_zones();
+        assert!(rgbzone.is_ok());
+        if let Ok(rgbzone) = rgbzone {
+            assert_eq!(rgbzone.zones.len(), 3);
+            let head = rgbzone.zones.get(&crate::Zone::Head).unwrap();
+            assert_eq!(head.zone, crate::Zone::Head);
+            assert_eq!(head.red, 0u8);
+            assert_eq!(head.green, 0u8);
+            assert_eq!(head.blue, 15u8);
+            let left = rgbzone.zones.get(&crate::Zone::Left).unwrap();
+            assert_eq!(left.zone, crate::Zone::Left);
+            assert_eq!(left.red, 0u8);
+            assert_eq!(left.green, 15u8);
+            assert_eq!(left.blue, 0u8);
+            let right = rgbzone.zones.get(&crate::Zone::Right).unwrap();
+            assert_eq!(right.zone, crate::Zone::Right);
+            assert_eq!(right.red, 15u8);
+            assert_eq!(right.green, 0u8);
+            assert_eq!(right.blue, 0u8);
+        }
     }
 
     #[test]
@@ -423,10 +435,13 @@ mod tests {
     #[test]
     fn get_hdmi() {
         let alienware = crate::Alienware::test(setup_aw("get_hdmi"));
-        let rtn = alienware.get_hdmi();
-        assert!(rtn.exists);
-        assert_eq!(rtn.source, crate::HDMISource::Gpu);
-        assert_eq!(rtn.cable_state, crate::HDMICableState::Connected);
+        let hdmi = alienware.get_hdmi();
+        assert!(hdmi.is_ok());
+        if let Ok(hdmi) = hdmi {
+            assert!(hdmi.exists);
+            assert_eq!(hdmi.source, crate::HDMISource::Gpu);
+            assert_eq!(hdmi.cable_state, crate::HDMICableState::Connected);
+        }
     }
 
     #[test]

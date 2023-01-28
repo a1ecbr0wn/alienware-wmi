@@ -29,59 +29,81 @@ fn main() {
 
     if options.connector {
         let hdmi = aw.get_hdmi();
-        if options.json {
-            let hdmi_data = object! {
-                "hdmi": {
-                    "exists": hdmi.exists,
-                    "input": format!( "{}", hdmi.cable_state ),
-                    "output": format!( "{}", hdmi.source ),
-                }
-            };
-            json_data.insert("hdmi", hdmi_data).unwrap();
-        } else {
-            print!("HDMI passthrough state: ");
-            if hdmi.exists {
-                println!("present");
-                println!("    Input HDMI is {}", hdmi.cable_state);
-                println!("    Output HDMI is connected to {}", hdmi.source);
+        if let Ok(hdmi) = hdmi {
+            if options.json {
+                let hdmi_data = object! {
+                    "hdmi": {
+                        "exists": hdmi.exists,
+                        "input": format!( "{}", hdmi.cable_state ),
+                        "output": format!( "{}", hdmi.source ),
+                    }
+                };
+                json_data.insert("hdmi", hdmi_data).unwrap();
             } else {
-                println!("not present");
+                print!("HDMI passthrough state: ");
+                if hdmi.exists {
+                    println!("present");
+                    println!("    Input HDMI is {}", hdmi.cable_state);
+                    println!("    Output HDMI is connected to {}", hdmi.source);
+                } else {
+                    println!("not present");
+                }
+                println!();
             }
-            println!();
+        } else if let Err(x) = hdmi {
+            match x.kind() {
+                ErrorKind::PermissionDenied => {
+                    println!("You do not have permission to run this command (do you need sudo?)")
+                }
+                _ => {
+                    println!("Problem getting HDMI state {:?} ", x.kind())
+                }
+            }
         }
     }
 
     if options.led_state {
         let leds = aw.get_rgb_zones();
-        if options.json {
-            let mut leds_data = object! {
-                "exists": leds.exists,
-            };
-            for zone in leds.zones.values() {
-                let zone_data = object! {
-                    "red": zone.red,
-                    "green": zone.green,
-                    "blue": zone.blue,
+        if let Ok(leds) = leds {
+            if options.json {
+                let mut leds_data = object! {
+                    "exists": leds.exists,
                 };
-                leds_data
-                    .insert(format!("{}", zone.zone).as_str(), zone_data)
-                    .unwrap();
-            }
-            json_data.insert("leds", leds_data).unwrap();
-        } else {
-            print!("LED state: ");
-            if leds.exists {
-                println!("present");
                 for zone in leds.zones.values() {
-                    println!("    {}:", zone.zone);
-                    println!("        red: {}", zone.red);
-                    println!("        green: {}", zone.green);
-                    println!("        blue: {}", zone.blue);
+                    let zone_data = object! {
+                        "red": zone.red,
+                        "green": zone.green,
+                        "blue": zone.blue,
+                    };
+                    leds_data
+                        .insert(format!("{}", zone.zone).as_str(), zone_data)
+                        .unwrap();
                 }
+                json_data.insert("leds", leds_data).unwrap();
             } else {
-                println!("not present");
+                print!("LED state: ");
+                if leds.exists {
+                    println!("present");
+                    for zone in leds.zones.values() {
+                        println!("    {}:", zone.zone);
+                        println!("        red: {}", zone.red);
+                        println!("        green: {}", zone.green);
+                        println!("        blue: {}", zone.blue);
+                    }
+                } else {
+                    println!("not present");
+                }
+                println!();
             }
-            println!();
+        } else if let Err(x) = leds {
+            match x.kind() {
+                ErrorKind::PermissionDenied => {
+                    println!("You do not have permission to run this command (do you need sudo?)")
+                }
+                _ => {
+                    println!("Problem getting LED state {:?} ", x.kind())
+                }
+            }
         }
     }
 
@@ -105,27 +127,36 @@ fn main() {
 /// Set the chosen Zone to the specified RGB
 fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
     let leds = aw.get_rgb_zones();
-    if leds.exists {
-        if leds.zones.contains_key(&zone) {
-            let (r, g, b) = parse_rgb_string(input.as_str());
-            match aw.set_rgb_zone(zone, r, g, b) {
-                Ok(_) => {}
-                Err(error) => {
-                    match error.kind() {
+    if let Ok(leds) = leds {
+        if leds.exists {
+            if leds.zones.contains_key(&zone) {
+                let (r, g, b) = parse_rgb_string(input.as_str());
+                match aw.set_rgb_zone(zone, r, g, b) {
+                    Ok(_) => {}
+                    Err(x) => match x.kind() {
                         ErrorKind::PermissionDenied => {
                             println!("You do not have permission to run this command (do you need sudo?)")
                         }
                         _ => {
-                            println!("Problem setting RGB value {:?} ", error.kind())
+                            println!("Problem setting RGB value {:?} ", x.kind())
                         }
-                    }
-                }
-            };
+                    },
+                };
+            } else {
+                println!("There are no {zone} LEDs");
+            }
         } else {
-            println!("There are no {zone} LEDs");
+            println!("There is no alienware LED unit on this machine");
         }
-    } else {
-        println!("There is no alienware LED unit on this machine");
+    } else if let Err(x) = leds {
+        match x.kind() {
+            ErrorKind::PermissionDenied => {
+                println!("You do not have permission to run this command (do you need sudo?)")
+            }
+            _ => {
+                println!("Problem setting RGB value {:?} ", x.kind())
+            }
+        }
     }
 }
 
