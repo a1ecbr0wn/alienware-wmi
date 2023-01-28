@@ -5,8 +5,9 @@ use clap::Parser;
 use json::object;
 use lazy_static::lazy_static;
 use regex::Regex;
+use snapcraft::in_snap;
 use std::io::ErrorKind;
-use std::process::exit;
+use std::process::{exit, Command};
 
 fn main() {
     lazy_static! {
@@ -31,36 +32,37 @@ fn main() {
         let hdmi = aw.get_hdmi();
         if let Ok(hdmi) = hdmi {
             if options.json {
-            let hdmi_data = object! {
-                "hdmi": {
-                    "exists": hdmi.exists,
-                    "input": format!( "{}", hdmi.cable_state ),
-                    "output": format!( "{}", hdmi.source ),
-                }
-            };
-            json_data.insert("hdmi", hdmi_data).unwrap();
-        } else {
-            print!("HDMI passthrough state: ");
-            if hdmi.exists {
-                println!("present");
-                println!("    Input HDMI is {}", hdmi.cable_state);
-                println!("    Output HDMI is connected to {}", hdmi.source);
+                let hdmi_data = object! {
+                    "hdmi": {
+                        "exists": hdmi.exists,
+                        "input": format!( "{}", hdmi.cable_state ),
+                        "output": format!( "{}", hdmi.source ),
+                    }
+                };
+                json_data.insert("hdmi", hdmi_data).unwrap();
             } else {
-                println!("not present");
+                print!("HDMI passthrough state: ");
+                if hdmi.exists {
+                    println!("present");
+                    println!("    Input HDMI is {}", hdmi.cable_state);
+                    println!("    Output HDMI is connected to {}", hdmi.source);
+                } else {
+                    println!("not present");
+                }
+                println!();
             }
-            println!();
-        }
-    } else if let Err(x) = hdmi {
-        match x.kind() {
-            ErrorKind::PermissionDenied => {
-                println!("You do not have permission to run this command (do you need sudo?)")
-            }
-            _ => {
-                println!("Problem getting HDMI state {:?} ", x.kind())
+        } else if let Err(x) = hdmi {
+            match x.kind() {
+                ErrorKind::PermissionDenied => {
+                    println!("You do not have permission to run this command (do you need sudo?)");
+                    check_snap();
+                }
+                _ => {
+                    println!("Problem getting HDMI state {:?} ", x.kind());
+                }
             }
         }
     }
-}
 
     if options.led_state {
         let leds = aw.get_rgb_zones();
@@ -98,10 +100,11 @@ fn main() {
         } else if let Err(x) = leds {
             match x.kind() {
                 ErrorKind::PermissionDenied => {
-                    println!("You do not have permission to run this command (do you need sudo?)")
+                    println!("You do not have permission to run this command (do you need sudo?)");
+                    check_snap();
                 }
                 _ => {
-                    println!("Problem getting LED state {:?} ", x.kind())
+                    println!("Problem getting LED state {:?} ", x.kind());
                 }
             }
         }
@@ -133,16 +136,15 @@ fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
                 let (r, g, b) = parse_rgb_string(input.as_str());
                 match aw.set_rgb_zone(zone, r, g, b) {
                     Ok(_) => {}
-                    Err(x) => {
-                        match x.kind() {
-                            ErrorKind::PermissionDenied => {
-                                println!("You do not have permission to run this command (do you need sudo?)")
-                            }
-                            _ => {
-                                println!("Problem setting RGB value {:?} ", x.kind())
-                            }
+                    Err(x) => match x.kind() {
+                        ErrorKind::PermissionDenied => {
+                            println!("You do not have permission to run this command (do you need sudo?)");
+                            check_snap();
                         }
-                    }
+                        _ => {
+                            println!("Problem setting RGB value {:?} ", x.kind());
+                        }
+                    },
                 };
             } else {
                 println!("There are no {zone} LEDs");
@@ -153,10 +155,11 @@ fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
     } else if let Err(x) = leds {
         match x.kind() {
             ErrorKind::PermissionDenied => {
-                println!("You do not have permission to run this command (do you need sudo?)")
+                println!("You do not have permission to run this command (do you need sudo?)");
+                check_snap();
             }
             _ => {
-                println!("Problem setting RGB value {:?} ", x.kind())
+                println!("Problem setting RGB value {:?} ", x.kind());
             }
         }
     }
@@ -195,6 +198,29 @@ fn parse_rgb_string(input: &str) -> (u8, u8, u8) {
                 }
                 _ => (0u8, 0u8, 15u8), // setting blue as the default
             }
+        }
+    }
+}
+
+fn check_snap() {
+    if in_snap() {
+        let is_snap_connected = {
+            let snap_connected_status = Command::new("snapctl")
+                .arg("is-connected")
+                .arg("alienware")
+                .status()
+                .unwrap_or_else(|_| {
+                    panic!(
+                        "Failed to check whether snap is able to read /sys/devices/platform/alienware-wmi"
+                    )
+                });
+            snap_connected_status.success()
+        };
+        if is_snap_connected {
+            println!("This may be because you have installed awc from snap, which prevents automatic setup.\n");
+            print!("The snap container initially blocks access to the alienware device setup that is needed to carry out this action.  ");
+            println!("The following command can be run to unblock access to the alienware device and then you can try again:\n");
+            println!("    sudo snap connect alienware-wmi:alienware\n \n",);
         }
     }
 }
