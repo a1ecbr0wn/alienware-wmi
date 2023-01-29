@@ -1,5 +1,5 @@
 title: Alienware CLI
-name: alienware-wmi
+name: alienware-cli
 type: app
 base: core20
 version: 'v1.0.5'
