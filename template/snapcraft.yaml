@@ -20,6 +20,20 @@ architectures:
   - build-on: amd64
     run-on: amd64
 
+slots:
+  alienware-wmi:
+    interface: custom-device
+    custom-device: alienware-wmi
+    files:
+      write:
+        - /sys/devices/platform/alienware-wmi/hdmi/*
+        - /sys/devices/platform/alienware-wmi/rgb_zones/*
+
+plugs:
+  alienware:
+    interface: custom-device
+    custom-device: alienware-wmi
+
 parts:
  awc:
     plugin: rust
