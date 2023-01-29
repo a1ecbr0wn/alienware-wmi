@@ -5,8 +5,9 @@ use clap::Parser;
 use json::object;
 use lazy_static::lazy_static;
 use regex::Regex;
+use snapcraft::in_snap;
 use std::io::ErrorKind;
-use std::process::exit;
+use std::process::{exit, Command};
 
 fn main() {
     lazy_static! {
@@ -53,10 +54,11 @@ fn main() {
         } else if let Err(x) = hdmi {
             match x.kind() {
                 ErrorKind::PermissionDenied => {
-                    println!("You do not have permission to run this command (do you need sudo?)")
+                    println!("You do not have permission to run this command (do you need sudo?)");
+                    check_snap();
                 }
                 _ => {
-                    println!("Problem getting HDMI state {:?} ", x.kind())
+                    println!("Problem getting HDMI state {:?} ", x.kind());
                 }
             }
         }
@@ -98,10 +100,11 @@ fn main() {
         } else if let Err(x) = leds {
             match x.kind() {
                 ErrorKind::PermissionDenied => {
-                    println!("You do not have permission to run this command (do you need sudo?)")
+                    println!("You do not have permission to run this command (do you need sudo?)");
+                    check_snap();
                 }
                 _ => {
-                    println!("Problem getting LED state {:?} ", x.kind())
+                    println!("Problem getting LED state {:?} ", x.kind());
                 }
             }
         }
@@ -135,10 +138,11 @@ fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
                     Ok(_) => {}
                     Err(x) => match x.kind() {
                         ErrorKind::PermissionDenied => {
-                            println!("You do not have permission to run this command (do you need sudo?)")
+                            println!("You do not have permission to run this command (do you need sudo?)");
+                            check_snap();
                         }
                         _ => {
-                            println!("Problem setting RGB value {:?} ", x.kind())
+                            println!("Problem setting RGB value {:?} ", x.kind());
                         }
                     },
                 };
@@ -151,10 +155,11 @@ fn set_led_zone_rgb(aw: &Alienware, zone: Zone, input: String) {
     } else if let Err(x) = leds {
         match x.kind() {
             ErrorKind::PermissionDenied => {
-                println!("You do not have permission to run this command (do you need sudo?)")
+                println!("You do not have permission to run this command (do you need sudo?)");
+                check_snap();
             }
             _ => {
-                println!("Problem setting RGB value {:?} ", x.kind())
+                println!("Problem setting RGB value {:?} ", x.kind());
             }
         }
     }
@@ -193,6 +198,29 @@ fn parse_rgb_string(input: &str) -> (u8, u8, u8) {
                 }
                 _ => (0u8, 0u8, 15u8), // setting blue as the default
             }
+        }
+    }
+}
+
+fn check_snap() {
+    if in_snap() {
+        let is_snap_connected = {
+            let snap_connected_status = Command::new("snapctl")
+                .arg("is-connected")
+                .arg("alienware")
+                .status()
+                .unwrap_or_else(|_| {
+                    panic!(
+                        "Failed to check whether snap is able to read /sys/devices/platform/alienware-wmi"
+                    )
+                });
+            snap_connected_status.success()
+        };
+        if is_snap_connected {
+            println!("This may be because you have installed awc from snap, which prevents automatic setup.\n");
+            print!("The snap container initially blocks access to the alienware device setup that is needed to carry out this action.  ");
+            println!("The following command can be run to unblock access to the alienware device and then you can try again:\n");
+            println!("    sudo snap connect alienware-wmi:alienware\n \n",);
         }
     }
 }
