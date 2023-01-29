@@ -2,7 +2,7 @@ title: Alienware CLI
 name: alienware-wmi
 type: app
 base: core20
-version: 'v1.0.4'
+version: 'v1.0.5'
 summary: Alienware LEDs and HDMI Control
 description: |
   The `alienware-cli` application controls the LEDs and the HDMI in and out ports on an Alienware Alpha desktop machine.
@@ -20,27 +20,12 @@ architectures:
   - build-on: amd64
     run-on: amd64
 
-slots:
-  alienware:
-    interface: custom-device
-    custom-device: alienware-wmi
-    files:
-      write:
-        - /sys/devices/platform/alienware-wmi/hdmi/*
-        - /sys/devices/platform/alienware-wmi/rgb_zones/*
-
-plugs:
-  alienware:
-    interface: custom-device
-    custom-device: alienware-wmi
-
 parts:
-  awc:
+ awc:
     plugin: rust
-    source: https://github.com/a1ecbr0wn/alienware-wmi/archive/refs/tags/v1.0.4.tar.gz
+    source: https://github.com/a1ecbr0wn/alienware-wmi/archive/refs/tags/v1.0.5.tar.gz
     rust-path: ["alienware_cli"]
 
 apps:
   awc:
     command: bin/awc
-    plugs: [alienware]
