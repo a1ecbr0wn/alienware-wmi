@@ -12,7 +12,7 @@ use std::process::{exit, Command};
 fn main() {
     lazy_static! {
         static ref DESCRIPTION: String = format!(
-            "awc v{}: Command Line app to control the lights on an Alienware Alpha R1/R2",
+            "alienware-cli v{}: Command Line app to control the lights on an Alienware Alpha R1/R2",
             env!("CARGO_PKG_VERSION")
         );
     }
@@ -217,7 +217,7 @@ fn check_snap() {
             snap_connected_status.success()
         };
         if is_snap_connected {
-            println!("This may be because you have installed awc from snap, which prevents automatic setup.\n");
+            println!("This may be because you have installed alienware-cli from snap, which prevents automatic setup.\n");
             print!("The snap container initially blocks access to the alienware device setup that is needed to carry out this action.  ");
             println!("The following command can be run to unblock access to the alienware device and then you can try again:\n");
             println!("    sudo snap connect alienware-wmi:alienware\n \n",);

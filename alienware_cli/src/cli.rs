@@ -3,7 +3,7 @@ use clap::Parser;
 /// Struct containing the parsed command line arguments
 #[derive(Parser)]
 #[command(name = "alienware-cli")]
-#[command(bin_name = "awc")]
+#[command(bin_name = "alienware-cli")]
 #[command(author, version, about, long_about = None, arg_required_else_help(true), disable_version_flag(true))]
 pub struct Options {
     /// State of the HDMI ports

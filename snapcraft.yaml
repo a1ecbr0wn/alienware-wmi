@@ -20,26 +20,21 @@ architectures:
   - build-on: amd64
     run-on: amd64
 
-slots:
-  alienware-wmi:
-    interface: custom-device
-    custom-device: alienware-wmi
-    files:
-      write:
-        - /sys/devices/platform/alienware-wmi/hdmi/*
-        - /sys/devices/platform/alienware-wmi/rgb_zones/*
-
 plugs:
-  alienware:
-    interface: custom-device
-    custom-device: alienware-wmi
+  alienware-system-files:
+    interface: system-files
+    write:
+      - /sys/devices/platform/alienware-wmi/hdmi/*
+      - /sys/devices/platform/alienware-wmi/rgb_zones/*
 
 parts:
- awc:
+ alienware-cli:
     plugin: rust
     source: https://github.com/a1ecbr0wn/alienware-wmi/archive/refs/tags/v1.0.5.tar.gz
     rust-path: ["alienware_cli"]
 
 apps:
-  awc:
-    command: bin/awc
+  alienware-cli:
+    command: bin/alienware-cli
+    plugs:
+    - alienware-system-files

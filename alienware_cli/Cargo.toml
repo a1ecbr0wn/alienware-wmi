@@ -1,6 +1,6 @@
 [package]
 name = "alienware_cli"
-version = "1.0.5"
+version = "1.0.6"
 edition = "2021"
 authors = ["Alec Brown <alec@noser.net>"]
 description = "Command Line app to control the lights on an Alienware Alpha R1/R2"
@@ -16,7 +16,7 @@ rust-version = "1.58"
 
 [[bin]]
 path = "src/main.rs"
-name = "awc"
+name = "alienware-cli"
 
 [dependencies]
 alienware = { path = "../alienware", version = "1.0.1"}

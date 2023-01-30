@@ -21,13 +21,13 @@ Second method: install for yourself using cargo and then copy to a location that
 
 ```bash
 cargo install alienware-cli
-sudo cp ~/.cargo/bin/awc /usr/local/bin
+sudo cp ~/.cargo/bin/alienware-cli /usr/local/bin
 ```
 
 Third method: grab the latest version from the [releases](https://github.com/a1ecbr0wn/alienware-wmi/releases) page:
 
 ```bash
-curl -OL https://github.com/a1ecbr0wn/alienware-wmi/releases/download/latest/awc && chmod 775 awc
+curl -OL https://github.com/a1ecbr0wn/alienware-wmi/releases/download/latest/alienware-cli && chmod 775 alienware-cli
 ```
 
 ## Use
@@ -35,10 +35,10 @@ curl -OL https://github.com/a1ecbr0wn/alienware-wmi/releases/download/latest/awc
 To see a description of the command line parameters use the `-h` parameter:
 
 ``` bash
-$ awc -h
+$ alienware-cli -h
 Command Line app to control the lights on an Alienware Alpha R1/R2
 
-Usage: awc [OPTIONS]
+Usage: alienware-cli [OPTIONS]
 
 Options:
   -c, --connector      State of the HDMI ports
@@ -56,7 +56,7 @@ be used together or separately and can also be used with the `-j` parameter whic
 for machine readability:
 
 ```bash
-$ awc -lc
+$ alienware-cli -lc
 HDMI passthrough state: present
     Input HDMI is unconnected
     Output HDMI is connected to gpu
@@ -73,7 +73,7 @@ LED state: present
 ```
 
 ```bash
-$ awc -jlc
+$ alienware-cli -jlc
 {"hdmi":{"hdmi":{"exists":true,"input":"unconnected","output":"gpu"}},"leds":{"exists":true,"left":{"red":0,"green":15,"blue":15},"head":{"red":15,"green":0,"blue":15}}}
 ```
 
@@ -85,11 +85,11 @@ should be run with root permissions:
 Both of the following examples sets the head button to cyan:
 
 ```bash
-sudo awc -H cyan
+sudo alienware-cli -H cyan
 ```
 
 ```bash
-sudo awc -H "0 15 15"
+sudo alienware-cli -H "0 15 15"
 ```
 
 ## Disclaimer and License

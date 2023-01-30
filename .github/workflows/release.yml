@@ -81,7 +81,7 @@ jobs:
           prerelease: false
           files: |
             LICENSE
-            target/release/awc
+            target/release/alienware-cli
 
       - name: Sleep for 10 seconds so that crates.io can update it's references to alienware
         run: sleep 10s
