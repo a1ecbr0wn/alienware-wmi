@@ -24,4 +24,4 @@ clap = { version = "4.0", features = ["derive"] }
 json = "0.12.4"
 regex = "1.5.5"
 lazy_static = "1.4.0"
-snapcraft = "0.1.0"
+snapcraft = "0.3.0"
