@@ -37,4 +37,4 @@ apps:
   alienware-cli:
     command: bin/alienware-cli
     plugs:
-    - alienware-system-files
+    - sys-devices-platform-alienware-wmi
