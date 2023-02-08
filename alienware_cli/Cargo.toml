@@ -1,6 +1,6 @@
 [package]
 name = "alienware_cli"
-version = "1.0.7"
+version = "1.0.8"
 edition = "2021"
 authors = ["Alec Brown <alec@noser.net>"]
 description = "Command Line app to control the lights on an Alienware Alpha R1/R2"
@@ -19,7 +19,7 @@ path = "src/main.rs"
 name = "alienware-cli"
 
 [dependencies]
-alienware = { path = "../alienware", version = "1.0.7"}
+alienware = { path = "../alienware", version = "1.0.8"}
 clap = { version = "4.1", features = ["derive"] }
 json = "0.12.4"
 regex = "1.7.1"

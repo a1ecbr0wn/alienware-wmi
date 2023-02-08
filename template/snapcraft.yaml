@@ -21,11 +21,11 @@ architectures:
     run-on: amd64
 
 plugs:
-  alienware-system-files:
+  sys-devices-platform-alienware-wmi:
     interface: system-files
     write:
-      - /sys/devices/platform/alienware-wmi/hdmi/*
-      - /sys/devices/platform/alienware-wmi/rgb_zones/*
+      - /sys/devices/platform/alienware-wmi/hdmi/
+      - /sys/devices/platform/alienware-wmi/rgb_zones/
 
 parts:
  alienware-cli:
