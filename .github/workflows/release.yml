@@ -46,6 +46,7 @@ jobs:
     name: "Release Lib to crates.io"
     runs-on: ubuntu-latest
     needs: [tag-release]
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
     strategy:
       matrix:
         RUST: [stable]
