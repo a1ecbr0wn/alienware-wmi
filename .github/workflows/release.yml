@@ -123,8 +123,7 @@ jobs:
   release-cli-snap:
     name: "Initiate release of the alienware cli application"
     runs-on: ubuntu-latest
-    needs: [release-lib]
-    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
+    needs: [tag-release]
 
     steps:
       - name: "Repository Dispatch"
