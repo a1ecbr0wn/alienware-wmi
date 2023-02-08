@@ -92,6 +92,7 @@ jobs:
     name: "Release CLI to crates.io"
     runs-on: ubuntu-latest
     needs: [release-lib]
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
     strategy:
       matrix:
         RUST: [stable]
@@ -123,6 +124,7 @@ jobs:
     name: "Initiate release of the alienware cli application"
     runs-on: ubuntu-latest
     needs: [release-lib]
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
 
     steps:
       - name: "Repository Dispatch"
