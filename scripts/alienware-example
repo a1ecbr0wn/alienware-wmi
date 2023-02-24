@@ -1,0 +1,78 @@
+alienware-cli -H black
+alienware-cli -L black
+sleep 5
+alienware-cli -H red
+sleep .5
+alienware-cli -H magenta
+sleep .5
+alienware-cli -H blue
+sleep .5
+alienware-cli -H cyan
+sleep .5
+alienware-cli -H green
+sleep .5
+alienware-cli -H yellow
+sleep .5
+alienware-cli -H white
+sleep .5
+alienware-cli -L red
+sleep .5
+alienware-cli -L magenta
+sleep .5
+alienware-cli -L blue
+sleep .5
+alienware-cli -L cyan
+sleep .5
+alienware-cli -L green
+sleep .5
+alienware-cli -L yellow
+sleep .5
+alienware-cli -L white
+sleep 5
+
+alienware-cli -H yellow
+sleep .5
+alienware-cli -H green
+sleep .5
+alienware-cli -H cyan
+sleep .5
+alienware-cli -H blue
+sleep .5
+alienware-cli -H magenta
+sleep .5
+alienware-cli -H red
+sleep .5
+alienware-cli -H black
+sleep .5
+alienware-cli -L yellow
+sleep .5
+alienware-cli -L green
+sleep .5
+alienware-cli -L cyan
+sleep .5
+alienware-cli -L blue
+sleep .5
+alienware-cli -L magenta
+sleep .5
+alienware-cli -L red
+sleep .5
+alienware-cli -L black
+sleep 2
+
+alienware-cli -L red
+alienware-cli -H green
+sleep 2
+alienware-cli -H red
+alienware-cli -L green
+sleep 2
+alienware-cli -L red
+alienware-cli -H green
+sleep 2
+alienware-cli -H red
+alienware-cli -L green
+sleep 2
+alienware-cli -L blue
+alienware-cli -H blue
+sleep 5
+alienware-cli -L black
+alienware-cli -H black
