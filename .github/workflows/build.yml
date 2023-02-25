@@ -4,17 +4,19 @@ on:
   push:
     branches:
       - '**'
-    paths-ignore:
-      - '**/*.md'
-      - 'LICENSE'
-      - '**/snapcraft.yaml'
+    paths:
+      - '**/*.rs'
+      - 'src/*'
+      - 'Cargo.*'
+      - '.github/workflows/build.yml'
   pull_request:
     branches:
       - '**'
-    paths-ignore:
-      - '**/*.md'
-      - 'LICENSE'
-      - '**/snapcraft.yaml'      
+    paths:
+      - '**/*.rs'
+      - 'src/*'
+      - 'Cargo.*'
+      - '.github/workflows/build.yml'
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
