@@ -28,7 +28,7 @@ sleep .5
 alienware-cli -L yellow
 sleep .5
 alienware-cli -L white
-sleep 5
+sleep 2
 
 alienware-cli -H yellow
 sleep .5
@@ -61,16 +61,16 @@ sleep 2
 
 alienware-cli -L red
 alienware-cli -H green
-sleep 2
+sleep 1
 alienware-cli -H red
 alienware-cli -L green
-sleep 2
+sleep 1
 alienware-cli -L red
 alienware-cli -H green
-sleep 2
+sleep 1
 alienware-cli -H red
 alienware-cli -L green
-sleep 2
+sleep 1
 alienware-cli -L blue
 alienware-cli -H blue
 sleep 5
