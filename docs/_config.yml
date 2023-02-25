@@ -15,4 +15,4 @@ color_scheme: dark
 footer_content: "<a href=\"https://a1ecbr0wn.com\"><img alt=\"a1ecbr0wn\" src=\"https://img.shields.io/badge/a1ecbr0wn-home-brightgreen\"></a> <img alt=\"Crates.io License\" src=\"https://img.shields.io/crates/l/alienware-cli\"> <a href=\"https://snapcraft.io/alienware-cli\"><img alt=\"alienware-cli\" src=\"https://snapcraft.io/alienware-cli/badge.svg\" /></a>"
 aux_links:
   "<i class=\"fa-brands fa-2x fa-github\"></i>":
-    - "https://github.com/a1ecbr0wn/alienware-cli"
+    - "https://github.com/a1ecbr0wn/alienware-wmi"
