@@ -9,8 +9,8 @@ on:
 
 jobs:
   tag-release:
-    name: "Tag Release Build"
-    runs-on: "ubuntu-latest"
+    name: Tag Release Build
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         rust: [stable]
@@ -18,32 +18,26 @@ jobs:
           - x86_64-unknown-linux-gnu
 
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: "Toolchain setup"
-        uses: actions-rs/toolchain@v1
+      - name: Toolchain setup
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
-          override: true
 
-      - name: "Build"
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
+      - name: Cross setup
+        run: cargo install cross
 
-      - name: "Test"
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: test
-          args: --target=${{ matrix.TARGET }}
+      - name: Test
+        run: cross test --target=${{ matrix.TARGET }}
+
+      - name: Build
+        run: cross build --release
 
   release-lib:
-    name: "Release Lib to crates.io"
+    name: Release Lib to crates.io
     runs-on: ubuntu-latest
     needs: [tag-release]
     if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
@@ -54,27 +48,22 @@ jobs:
           - x86_64-unknown-linux-gnu
 
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: "Toolchain setup"
-        uses: actions-rs/toolchain@v1
+      - name: Toolchain setup
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
-          override: true
 
-      - name: "Publish API to crates.io"
+      - name: Publish API to crates.io
         env:
           CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
-          args: -p alienware
+        run: cargo publish -p alienware
 
-      - name: "Create CLI Release"
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Create CLI Release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           automatic_release_tag: "latest"
           title: "Release ${{ github.ref_name }}"
@@ -89,7 +78,7 @@ jobs:
         shell: bash
 
   release-cli-crates:
-    name: "Release CLI to crates.io"
+    name: Release CLI to crates.io
     runs-on: ubuntu-latest
     needs: [release-lib]
     if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
@@ -100,33 +89,28 @@ jobs:
           - x86_64-unknown-linux-gnu
 
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: "Toolchain setup"
-        uses: actions-rs/toolchain@v1
+      - name: Toolchain setup
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
-          override: true
 
-      - name: "Publish CLI to crates.io"
+      - name: Publish CLI to crates.io
         env:
           CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
-          args: -p alienware_cli
+        run: cargo publish -p alienware_cli
 
   # Kick off the workflow in this repo that will generate the snapcraft yaml file 
   release-cli-snap:
-    name: "Initiate release of the alienware cli application"
+    name: Initiate release of the alienware cli application
     runs-on: ubuntu-latest
     needs: [tag-release]
 
     steps:
-      - name: "Repository Dispatch"
+      - name: Repository Dispatch
         uses: benc-uk/workflow-dispatch@v1
         with:
           token: ${{ secrets.PAT }}
