@@ -26,7 +26,7 @@ env:
 
 jobs:
   build:
-    name: "CI Build"
+    name: CI Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,25 +35,20 @@ jobs:
           - x86_64-unknown-linux-gnu
 
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@v3
       
-      - name: "Toolchain setup"
-        uses: actions-rs/toolchain@v1
+      - name: Toolchain setup
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
-          override: true
 
-      - name: "Build"
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
+      - name: Cross setup
+        run: cargo install cross
 
-      - name: "Test"
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: test
-          args: --target=${{ matrix.TARGET }}
+      - name: Build
+        run: cross build
+
+      - name: Test
+        run: cross test --target=${{ matrix.TARGET }}
