@@ -1,6 +1,6 @@
 # alienware-cli
 
- [![Crates.io](https://img.shields.io/crates/l/alienware_cli)](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) [![Crates.io](https://img.shields.io/crates/v/alienware_cli)](https://crates.io/crates/alienware_cli) [![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml)
+ [![Crates.io](https://img.shields.io/crates/l/alienware_cli)](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) [![Crates.io](https://img.shields.io/crates/v/alienware_cli)](https://crates.io/crates/alienware_cli) [![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml)  [![dependency status](https://deps.rs/repo/github/a1ecbr0wn/alienware-wmi/status.svg)](https://deps.rs/repo/github/a1ecbr0wn/alienware-wmi) [![snapcraft.io](https://snapcraft.io/alienware-cli/badge.svg)](https://snapcraft.io/alienware-cli)
 
 The `alienware-cli` application controls the LEDs and the HDMI in and out ports on an Alienware Alpha desktop machine.
 The API is based on the `alienware_wmi_control.sh` script that used to come with the SteamOS distribution of Linux for
