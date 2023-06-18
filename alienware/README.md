@@ -1,6 +1,6 @@
 # alienware
 
-[![Crates.io](https://img.shields.io/crates/l/alienware)](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) [![Crates.io](https://img.shields.io/crates/v/alienware)](https://crates.io/crates/alienware) [![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml) [![docs.rs](https://img.shields.io/docsrs/alienware)](https://docs.rs/alienware)
+[![Crates.io](https://img.shields.io/crates/l/alienware)](https://github.com/a1ecbr0wn/alienware-wmi/blob/main/LICENSE) [![Crates.io](https://img.shields.io/crates/v/alienware)](https://crates.io/crates/alienware) [![Build Status](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml/badge.svg)](https://github.com/a1ecbr0wn/alienware-wmi/actions/workflows/build.yml) [![docs.rs](https://img.shields.io/docsrs/alienware)](https://docs.rs/alienware) [![dependency status](https://deps.rs/repo/github/a1ecbr0wn/alienware-wmi/status.svg)](https://deps.rs/repo/github/a1ecbr0wn/alienware-wmi)
 
 The `alienware` crate provides a Rust API access to the Linux sysfs platform api for control of the lights on an
 Alienware Alpha desktop machine.  The API is based on the `alienware_wmi_control.sh` script that used to come with the
