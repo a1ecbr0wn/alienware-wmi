@@ -6,16 +6,16 @@ on:
       - '**'
     paths:
       - '**/*.rs'
-      - 'src/*'
-      - 'Cargo.*'
+      - '**/src/*'
+      - '**/Cargo.*'
       - '.github/workflows/build.yml'
   pull_request:
     branches:
       - '**'
     paths:
       - '**/*.rs'
-      - 'src/*'
-      - 'Cargo.*'
+      - '**/src/*'
+      - '**/Cargo.*'
       - '.github/workflows/build.yml'
   workflow_dispatch:
   schedule:
