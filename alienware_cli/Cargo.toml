@@ -22,6 +22,6 @@ name = "alienware-cli"
 alienware = { path = "../alienware", version = "1.0.9"}
 clap = { version = "4.1", features = ["derive"] }
 json = "0.12.4"
-regex = "1.7.1"
+regex = "1"
 lazy_static = "1.4.0"
-snapcraft = "0.3.0"
+snapcraft = "0.3"
