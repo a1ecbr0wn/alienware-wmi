@@ -3,25 +3,25 @@ mod cli;
 use alienware::{Alienware, Zone};
 use clap::Parser;
 use json::object;
-use lazy_static::lazy_static;
 use regex::Regex;
 use snapcraft::in_snap;
 use std::io::ErrorKind;
 use std::process::{exit, Command};
+use std::sync::OnceLock;
 
 fn main() {
-    lazy_static! {
-        static ref DESCRIPTION: String = format!(
+    static DESCRIPTION: OnceLock<String> = OnceLock::new();
+    let desc = DESCRIPTION.get_or_init(|| {
+        format!(
             "alienware-cli v{}: Command Line app to control the lights on an Alienware Alpha R1/R2",
             env!("CARGO_PKG_VERSION")
-        );
-    }
+        )
+    });
 
     let options = cli::Options::parse();
-    // parse_arguments(DESCRIPTION.as_str(), &mut options);
 
     if options.version {
-        println!("{}", DESCRIPTION.as_str());
+        println!("{}", desc.as_str());
         exit(0);
     }
 
@@ -178,10 +178,9 @@ fn parse_rgb_string(input: &str) -> (u8, u8, u8) {
         "blue" => (0u8, 0u8, 15u8),
         "magenta" => (15u8, 0u8, 15u8),
         _ => {
-            lazy_static! {
-                static ref RE: Regex = Regex::new(r"(\d+) (\d+) (\d+)").unwrap();
-            }
-            match RE.captures(input.as_str()) {
+            static RE: OnceLock<Regex> = OnceLock::new();
+            let re = RE.get_or_init(|| Regex::new(r"(\d+) (\d+) (\d+)").unwrap());
+            match re.captures(input.as_str()) {
                 Some(caps) => {
                     if caps.len() == 4 {
                         let red = &caps[1];

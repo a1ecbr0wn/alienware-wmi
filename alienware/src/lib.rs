@@ -1,10 +1,10 @@
-use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fmt;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
+use std::sync::OnceLock;
 
 /// The possible sources of the HDMI output port
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -299,16 +299,15 @@ impl Alienware {
 
     /// Parses a single setting sysfs file
     fn parse_sys_file(&self, file_name: &str) -> std::io::Result<Option<String>> {
-        lazy_static! {
-            static ref RE: Regex = Regex::new(r"\[([^)]+)\]").unwrap();
-        }
+        static RE: OnceLock<Regex> = OnceLock::new();
+        let re = RE.get_or_init(|| Regex::new(r"\[([^)]+)\]").unwrap());
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
         let mut file = File::open(path_buf.as_path())?;
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
-        let caps = RE.captures(contents.as_str()).unwrap();
+        let caps = re.captures(contents.as_str()).unwrap();
         match caps.len() > 0 {
             true => Ok(Some(caps[1].to_string())),
             false => Ok(None),
@@ -317,16 +316,15 @@ impl Alienware {
 
     /// Parses a sysfs file that holds an RGB setting
     fn parse_sys_rgb_file(&self, file_name: &str) -> std::io::Result<(u8, u8, u8)> {
-        lazy_static! {
-            static ref RE: Regex = Regex::new(r"^red: (\d+), green: (\d+), blue: (\d+)").unwrap();
-        }
+        static RE: OnceLock<Regex> = OnceLock::new();
+        let re = RE.get_or_init(|| Regex::new(r"^red: (\d+), green: (\d+), blue: (\d+)").unwrap());
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
         let mut file = File::open(path_buf)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents).unwrap();
-        match RE.captures(contents.as_str()) {
+        match re.captures(contents.as_str()) {
             Some(caps) if caps.len() == 4 => {
                 let red = &caps[1];
                 let green = &caps[2];
