@@ -300,9 +300,7 @@ impl Alienware {
     /// Parses a single setting sysfs file
     fn parse_sys_file(&self, file_name: &str) -> std::io::Result<Option<String>> {
         static RE: OnceLock<Regex> = OnceLock::new();
-        let re = RE.get_or_init(|| {
-            Regex::new(r"\[([^)]+)\]").unwrap()
-        });
+        let re = RE.get_or_init(|| Regex::new(r"\[([^)]+)\]").unwrap());
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);
@@ -319,9 +317,7 @@ impl Alienware {
     /// Parses a sysfs file that holds an RGB setting
     fn parse_sys_rgb_file(&self, file_name: &str) -> std::io::Result<(u8, u8, u8)> {
         static RE: OnceLock<Regex> = OnceLock::new();
-        let re = RE.get_or_init(|| {
-            Regex::new(r"^red: (\d+), green: (\d+), blue: (\d+)").unwrap()
-        });
+        let re = RE.get_or_init(|| Regex::new(r"^red: (\d+), green: (\d+), blue: (\d+)").unwrap());
         let mut path_buf = PathBuf::new();
         path_buf.push(&self.platform);
         path_buf.push(file_name);

@@ -9,7 +9,6 @@ use std::io::ErrorKind;
 use std::process::{exit, Command};
 use std::sync::OnceLock;
 
-
 fn main() {
     static DESCRIPTION: OnceLock<String> = OnceLock::new();
     let desc = DESCRIPTION.get_or_init(|| {
@@ -179,11 +178,8 @@ fn parse_rgb_string(input: &str) -> (u8, u8, u8) {
         "blue" => (0u8, 0u8, 15u8),
         "magenta" => (15u8, 0u8, 15u8),
         _ => {
-
             static RE: OnceLock<Regex> = OnceLock::new();
-            let re = RE.get_or_init(|| {
-                Regex::new(r"(\d+) (\d+) (\d+)").unwrap()
-            });
+            let re = RE.get_or_init(|| Regex::new(r"(\d+) (\d+) (\d+)").unwrap());
             match re.captures(input.as_str()) {
                 Some(caps) => {
                     if caps.len() == 4 {
