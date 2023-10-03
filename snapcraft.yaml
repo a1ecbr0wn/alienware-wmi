@@ -2,7 +2,7 @@ title: Alienware CLI
 name: alienware-cli
 type: app
 base: core20
-version: 'v1.0.9'
+version: 'v1.0.10'
 summary: Alienware LEDs and HDMI Control
 description: |
   The `alienware-cli` application controls the LEDs and the HDMI in and out ports on an Alienware Alpha desktop machine.
@@ -12,8 +12,8 @@ description: |
 grade: stable
 confinement: strict
 issues: https://github.com/a1ecbr0wn/alienware-wmi/issues
-website: https://alienware.a1ecbr0wn.com
-icon: docs/img/appicon-512.png
+website: https://github.com/a1ecbr0wn/alienware-wmi/tree/main/alienware_cli
+icon: img/appicon-512.png
 license: Apache-2.0
 
 architectures:
@@ -30,7 +30,7 @@ plugs:
 parts:
  alienware-cli:
     plugin: rust
-    source: https://github.com/a1ecbr0wn/alienware-wmi/archive/refs/tags/v1.0.9.tar.gz
+    source: https://github.com/a1ecbr0wn/alienware-wmi/archive/refs/tags/v1.0.10.tar.gz
     rust-path: ["alienware_cli"]
 
 apps:
