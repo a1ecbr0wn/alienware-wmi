@@ -37,7 +37,7 @@ jobs:
         run: cross build --release
 
   # Release Lib to crates.io
-  release-lib:
+  release-lib-crates:
     name: Release Lib to crates.io
     runs-on: ubuntu-latest
     needs: [tag-release]
@@ -81,7 +81,7 @@ jobs:
   release-cli-crates:
     name: Release CLI to crates.io
     runs-on: ubuntu-latest
-    needs: [release-lib]
+    needs: [release-lib-crates]
     if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
     strategy:
       matrix:
@@ -104,11 +104,32 @@ jobs:
       #     CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
       #   run: cargo publish -p alienware_cli
 
+  # Create the release artifacts in GitHub
+  release-gh:
+    name: Create the release artifacts in GitHub
+    runs-on: ubuntu-latest
+    needs: [tag-release]
+    # if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create CLI Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "${{ github.ref_name }}"
+          name: "Release ${{ github.ref_name }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          files: |
+            LICENSE
+            target/release/alienware-cli
+
   # Kick off the workflow in this repo that will generate the snapcraft yaml file 
   # release-cli-snap:
   #   name: Initiate release of the alienware cli application
   #   runs-on: ubuntu-latest
-  #   needs: [tag-release]
+  #   needs: [release-cli-crates]
 
   #   steps:
   #     - name: Repository Dispatch
