@@ -58,10 +58,10 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
 
-      - name: Publish API to crates.io
-        env:
-          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-        run: cargo publish -p alienware
+      # - name: Publish API to crates.io
+      #   env:
+      #     CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+      #   run: cargo publish -p alienware
 
       - name: Create CLI Release
         uses: softprops/action-gh-release@v1
@@ -99,10 +99,10 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
 
-      - name: Publish CLI to crates.io
-        env:
-          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-        run: cargo publish -p alienware_cli
+      # - name: Publish CLI to crates.io
+      #   env:
+      #     CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+      #   run: cargo publish -p alienware_cli
 
   # Kick off the workflow in this repo that will generate the snapcraft yaml file 
   # release-cli-snap:
