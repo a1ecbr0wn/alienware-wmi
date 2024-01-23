@@ -3,3 +3,4 @@ members = [
     "alienware_cli",
     "alienware",
 ]
+resolver = "2"
