@@ -58,10 +58,10 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
 
-      # - name: Publish API to crates.io
-      #   env:
-      #     CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-      #   run: cargo publish -p alienware
+      - name: Publish API to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+        run: cargo publish -p alienware
 
       - name: Create CLI Release
         uses: softprops/action-gh-release@v1
@@ -99,17 +99,17 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
 
-      # - name: Publish CLI to crates.io
-      #   env:
-      #     CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
-      #   run: cargo publish -p alienware_cli
+      - name: Publish CLI to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
+        run: cargo publish -p alienware_cli
 
   # Create the release artifacts in GitHub
   release-gh:
     name: Create the release artifacts in GitHub
     runs-on: ubuntu-latest
     needs: [tag-release]
-    # if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
 
     steps:
       - name: Checkout
@@ -126,17 +126,18 @@ jobs:
             target/release/alienware-cli
 
   # Kick off the workflow in this repo that will generate the snapcraft yaml file 
-  # release-cli-snap:
-  #   name: Initiate release of the alienware cli application
-  #   runs-on: ubuntu-latest
-  #   needs: [release-cli-crates]
+  release-cli-snap:
+    name: Initiate release of the alienware cli application
+    runs-on: ubuntu-latest
+    needs: [release-cli-crates]
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false )
 
-  #   steps:
-  #     - name: Repository Dispatch
-  #       uses: benc-uk/workflow-dispatch@v1
-  #       with:
-  #         token: ${{ secrets.PAT }}
-  #         repo: a1ecbr0wn/alienware-wmi
-  #         ref: refs/heads/main
-  #         workflow: snap.yml
-  #         inputs: '{ "snap_version": "${{ github.ref_name }}" }'
+    steps:
+      - name: Repository Dispatch
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repo: a1ecbr0wn/alienware-wmi
+          ref: refs/heads/main
+          workflow: snap.yml
+          inputs: '{ "snap_version": "${{ github.ref_name }}" }'
