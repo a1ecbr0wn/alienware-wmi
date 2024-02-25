@@ -1,0 +1,70 @@
+---
+name: Tag a release
+
+on:
+  workflow_dispatch:
+    inputs: 
+
+      version:
+        description: 'Tag to apply, in the form "v0.0.0"'
+        required: true
+
+jobs:
+  tag-release:
+    name: Given the tag input value, check the value, update the version number of the application, commit, tag, push tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check the version number from input
+        run: |
+            echo "Validating that tag is a tag is in the correct format v0.0.1"
+            input_version="${{ github.event.inputs.version }}"
+            if grep -P '^v[0-9]+\.[0-9]+\.[0-9]+' <<< "${input_version}"; then
+                echo "tag=${input_version}" >> $GITHUB_ENV
+                echo "cargo_version=version = \"${input_version:1}\"" >> $GITHUB_ENV
+                echo "alienware_dep_version=alienware = { path = \"../alienware\", version = \"${input_version:1}\" }" >> $GITHUB_ENV
+            elif grep -P '^[0-9]+\.[0-9]+\.[0-9]+' <<< "${input_version}"; then
+                echo "tag=v${input_version}" >> $GITHUB_ENV
+                echo "cargo_version=version = \"${input_version}\"" >> $GITHUB_ENV
+                echo "alienware_dep_version=alienware = { path = \"../alienware\", version = \"${input_version}\" }" >> $GITHUB_ENV
+            else
+                false
+            fi
+
+      - name: Setup GPG
+        run: |
+          echo "${{ secrets.SIGNINGKEY }}" | gpg --import
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup git config
+        run: |
+          # setup the username and email.
+          git config user.name "Tag Bot"
+          git config user.email "github@noser.net"
+          # setup gpg configuration
+          git config commit.gpgsign true
+          git config user.signingkey ${{ secrets.SIGNINGKEYHASH }}
+
+      - name: Replace the version number in the Cargo.toml files
+        run: |
+            sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware/Cargo.toml
+            sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware-cli/Cargo.toml
+            sed -i 's#^alienware = { path = "../alienware", version = .*#${{ env.alienware_dep_version }}#g' alienware-cli/Cargo.toml
+    
+      - name: Add, push, tag, push
+        run: |
+            git add .
+            git commit -S -m "Release ${{ env.tag }}"
+            git push -f
+            git tag ${{ env.tag }} -s -m "Release ${{ env.tag }}"
+            git push origin ${{ env.tag }} -f
+
+      - name: Release Tag Repository Dispatch
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repo: ${{env.GITHUB_REPOSITORY}}
+          ref: refs/tags/${{ env.tag }}
+          workflow: release.yml

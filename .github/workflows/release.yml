@@ -1,5 +1,5 @@
 ---
-name: "Tag Release Build"
+name: Release Binaries on Tag
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   tag-release:
-    name: Tag Release Build
+    name: Build tag as a release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Toolchain setup
         uses: dtolnay/rust-toolchain@master
@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Toolchain setup
         uses: dtolnay/rust-toolchain@master
@@ -91,7 +91,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Toolchain setup
         uses: dtolnay/rust-toolchain@master
@@ -113,7 +113,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create CLI Release
         uses: softprops/action-gh-release@v1
@@ -136,7 +136,7 @@ jobs:
       - name: Repository Dispatch
         uses: benc-uk/workflow-dispatch@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repo: a1ecbr0wn/alienware-wmi
           ref: refs/heads/main
           workflow: snap.yml

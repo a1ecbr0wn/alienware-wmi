@@ -1,5 +1,5 @@
 ---
-name: "generate-snap"
+name: Generate Snap
 
 on:
   workflow_dispatch:
@@ -10,11 +10,11 @@ on:
 
 jobs:
   generate-formula:
-    name: "Generate a snap file"
+    name: Generate a snap file
     runs-on: ubuntu-latest
     steps:
 
-      - name: "Set Version"
+      - name: Set Version
         run: |
           input_version="${{ github.event.inputs.snap_version }}"
           if [ "${#input_version}" -eq "0" ]; then
@@ -25,10 +25,10 @@ jobs:
 
       - run: echo 'Release ${{ env.snap_version }}'
 
-      - name: "Checkout"
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: "Create the snap from the template"
+      - name: Create the snap from the template
         run: |
           cp template/snapcraft.yaml snapcraft.yaml
           cat snapcraft.yaml
@@ -36,16 +36,17 @@ jobs:
           echo " --- "
           cat snapcraft.yaml
 
-      - name: "Create Pull Request"
+      - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update snap to alienware-cli-${{ env.snap_version }}
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: alienware-cli-${{ env.snap_version }}
+          base: main
           delete-branch: true
           title: 'Update of snap for alienware-cli tag ${{ env.snap_version }}'
           body: |
