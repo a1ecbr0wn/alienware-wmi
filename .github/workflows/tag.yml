@@ -50,8 +50,8 @@ jobs:
       - name: Replace the version number in the Cargo.toml files
         run: |
             sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware/Cargo.toml
-            sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware-cli/Cargo.toml
-            sed -i 's#^alienware = { path = "../alienware", version = .*#${{ env.alienware_dep_version }}#g' alienware-cli/Cargo.toml
+            sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware_cli/Cargo.toml
+            sed -i 's#^alienware = { path = "../alienware", version = .*#${{ env.alienware_dep_version }}#g' alienware_cli/Cargo.toml
     
       - name: Add, push, tag, push
         run: |
