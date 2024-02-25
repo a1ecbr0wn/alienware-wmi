@@ -1,5 +1,5 @@
 ---
-name: rust-fmt
+name: Rust Format
 
 on:
   push:
