@@ -136,7 +136,7 @@ jobs:
       - name: Repository Dispatch
         uses: benc-uk/workflow-dispatch@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repo: a1ecbr0wn/alienware-wmi
           ref: refs/heads/main
           workflow: snap.yml
