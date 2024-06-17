@@ -12,7 +12,7 @@ name: Rust Clippy Analyze
 on:
   push:
     branches:
-      - main
+      - '**'
     paths:
       - '**/*.rs'
       - 'src/*'
