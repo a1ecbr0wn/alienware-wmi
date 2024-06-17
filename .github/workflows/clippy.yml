@@ -12,7 +12,7 @@ name: Rust Clippy Analyze
 on:
   push:
     branches:
-      - main
+      - '**'
     paths:
       - '**/*.rs'
       - 'src/*'
@@ -28,6 +28,7 @@ on:
       - '.github/workflows/clippy.yml'
   schedule:
     - cron: '0 2 * * 1'
+  workflow_dispatch:
 
 jobs:
   rust-clippy-analyze:
@@ -54,7 +55,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true

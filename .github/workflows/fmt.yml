@@ -10,6 +10,17 @@ on:
       - 'src/*'
       - 'Cargo.*'
       - '.github/workflows/fmt.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.rs'
+      - 'src/*'
+      - 'Cargo.*'
+      - '.github/workflows/fmt.yml'
+  schedule:
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
 
 jobs:
   format:
