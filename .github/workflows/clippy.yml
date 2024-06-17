@@ -28,6 +28,7 @@ on:
       - '.github/workflows/clippy.yml'
   schedule:
     - cron: '0 2 * * 1'
+  workflow_dispatch:
 
 jobs:
   rust-clippy-analyze:
