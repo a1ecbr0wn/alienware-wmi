@@ -2,7 +2,7 @@ mod cli;
 
 use alienware::{Alienware, Zone};
 use clap::Parser;
-use json::object;
+use jzon::object;
 use regex::Regex;
 use snapcraft::in_snap;
 use std::io::ErrorKind;
