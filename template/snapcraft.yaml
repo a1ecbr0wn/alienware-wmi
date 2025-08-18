@@ -12,6 +12,7 @@ description: |
 grade: stable
 confinement: strict
 issues: https://github.com/a1ecbr0wn/alienware-wmi/issues
+source-code: https://github.com/a1ecbr0wn/alienware-wmi
 website: https://alienware.a1ecbr0wn.com
 icon: docs/img/appicon-512.png
 license: Apache-2.0
