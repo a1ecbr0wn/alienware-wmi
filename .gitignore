@@ -1,5 +1,6 @@
 # Build
 Cargo.lock
+CHANGELOG.md
 /target
 
 # IDE
