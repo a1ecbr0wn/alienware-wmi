@@ -8,14 +8,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  tag-release:
+  release-tag:
     name: Build tag as a release
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rust: [stable]
-        TARGET:
-          - x86_64-unknown-linux-gnu
 
     steps:
       - name: Checkout
@@ -24,29 +19,40 @@ jobs:
       - name: Toolchain setup
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
 
       - name: Cross setup
         run: cargo install cross
 
       - name: Test
-        run: cross test --target=${{ matrix.TARGET }}
+        run: cargo test
 
       - name: Build
-        run: cross build --release
+        run: cargo build --release
+
+      - name: Package Release
+        run: tar cvzf alienware-cli.tar.gz --directory=target/release alienware-cli
+
+      - name: Generate SHA checksum
+        run: shasum -a 256 -U alienware-cli.tar.gz > alienware-cli.sha
+
+      - name: Generate MD5 checksum
+        run: md5sum --tag alienware-cli.tar.gz > alienware-cli.md5
+
+      - name: Upload the artifact with the workflow run
+        uses: actions/upload-artifact@v4
+        with:
+          name: alienware-cli-${{ github.ref_name }}
+          path: alienware-cli.*
+          retention-days: 1
 
   # Release Lib to crates.io
   release-lib-crates:
     name: Release Lib to crates.io
     runs-on: ubuntu-latest
-    needs: [tag-release]
-    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
-    strategy:
-      matrix:
-        RUST: [stable]
-        TARGET:
-          - x86_64-unknown-linux-gnu
+    needs: [release-tag]
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false )
 
     steps:
       - name: Checkout
@@ -55,23 +61,13 @@ jobs:
       - name: Toolchain setup
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
 
       - name: Publish API to crates.io
         env:
           CARGO_REGISTRY_TOKEN: "${{ secrets.CRATES_TOKEN }}"
         run: cargo publish -p alienware
-
-      - name: Create CLI Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: "${{ github.ref_name }}"
-          name: "Release ${{ github.ref_name }}"
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          files: |
-            LICENSE
-            target/release/alienware-cli
 
       - name: Sleep for 10 seconds so that crates.io can update it's references to alienware
         run: sleep 10s
@@ -82,12 +78,7 @@ jobs:
     name: Release CLI to crates.io
     runs-on: ubuntu-latest
     needs: [release-lib-crates]
-    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
-    strategy:
-      matrix:
-        RUST: [stable]
-        TARGET:
-          - x86_64-unknown-linux-gnu
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false )
 
     steps:
       - name: Checkout
@@ -96,8 +87,8 @@ jobs:
       - name: Toolchain setup
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
 
       - name: Publish CLI to crates.io
         env:
@@ -108,24 +99,39 @@ jobs:
   release-gh:
     name: Create the release artifacts in GitHub
     runs-on: ubuntu-latest
-    needs: [tag-release]
-    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false ) 
+    needs: [release-tag]
+    if: github.ref_type == 'tag' && ( contains(github.ref_name, '-') == false )
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: cliff.toml
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Download all release artifacts from the workflow
+        uses: actions/download-artifact@v5
 
       - name: Create CLI Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
+          body_path: CHANGELOG.md
           tag_name: "${{ github.ref_name }}"
           name: "Release ${{ github.ref_name }}"
           token: "${{ secrets.GITHUB_TOKEN }}"
           files: |
             LICENSE
-            target/release/alienware-cli
+            **/alienware-cli-*.*
 
-  # Kick off the workflow in this repo that will generate the snapcraft yaml file 
+  # Kick off the workflow in this repo that will generate the snapcraft yaml file
   release-cli-snap:
     name: Initiate release of the alienware cli application
     runs-on: ubuntu-latest
