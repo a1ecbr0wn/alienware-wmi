@@ -1,0 +1,14 @@
+User-Agent: *
+Allow: /
+Disallow: /admin
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /wp-includes/
+Disallow: /*.php
+Disallow: /*.sql
+
+User-Agent: FacebookBot
+Disallow: /
+
+User-Agent: PetalBot
+Disallow: /
