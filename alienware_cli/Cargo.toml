@@ -23,4 +23,4 @@ alienware = { path = "../alienware", version = "1.0.18" }
 clap = { version = "4.5.53", features = ["derive"] }
 jzon = "0.12.5"
 regex = "1.12.2"
-snapcraft = "0.4.3"
+snapcraft = "1.0.0"
