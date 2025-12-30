@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: docs
 nav_order: 1
 parent: Installation
 ---
