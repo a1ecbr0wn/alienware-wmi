@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "{{ site.title }} | {{ site.description }}"
+title: "alienware-cli | Command Line app to control the lights on an Alienware Alpha R1/R2}"
 nav_order: 1
 permalink: /
 ---

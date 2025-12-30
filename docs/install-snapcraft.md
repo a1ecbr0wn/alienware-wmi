@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "{{ site.title }} | Snapcraft Installation"
+title: "alienware-cli | Snapcraft Installation"
 nav_order: 1
 parent: Installation
 ---

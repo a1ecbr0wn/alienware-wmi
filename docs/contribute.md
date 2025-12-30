@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "{{ site.title }} | Contribute"
+title: "alienware-cli | Contribute"
 nav_order: 3
 ---
 

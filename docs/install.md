@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "{{ site.title }} | Installation"
+title: "alienware-cli | Installation"
 nav_order: 2
 has_children: true
 ---

@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "{{ site.title }} | Disclaimer"
+title: "alienware-cli | Disclaimer"
 nav_order: 4
 ---
 
