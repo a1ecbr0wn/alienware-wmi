@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "alienware-cli | Command Line app to control the lights on an Alienware Alpha R1/R2}"
+title: "Command Line app to control the lights on an Alienware Alpha R1/R2} | alienware-cli"
 nav_order: 1
 permalink: /
 ---

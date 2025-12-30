@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "alienware-cli | Disclaimer"
+title: "Disclaimer | alienware-cli"
 nav_order: 4
 ---
 

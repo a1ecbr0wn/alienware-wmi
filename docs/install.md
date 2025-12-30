@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "alienware-cli | Installation"
+title: "Installation | alienware-cli"
 nav_order: 2
 has_children: true
 ---

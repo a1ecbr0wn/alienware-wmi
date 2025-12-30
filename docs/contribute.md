@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: "alienware-cli | Contribute"
+title: "Contribute | alienware-cli"
 nav_order: 3
 ---
 
