@@ -1,5 +1,6 @@
 ---
 layout: docs
+title: "{{ site.title }} | {{ site.description }}"
 nav_order: 1
 permalink: /
 ---

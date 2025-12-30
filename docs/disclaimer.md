@@ -1,5 +1,6 @@
 ---
 layout: docs
+title: "{{ site.title }} | Disclaimer"
 nav_order: 4
 ---
 

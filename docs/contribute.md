@@ -1,5 +1,6 @@
 ---
 layout: docs
+title: "{{ site.title }} | Contribute"
 nav_order: 3
 ---
 
