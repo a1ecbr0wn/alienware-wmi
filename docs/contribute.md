@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: docs
+title: "Contribute | alienware-cli"
 nav_order: 3
 ---
 

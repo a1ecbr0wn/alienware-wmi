@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>{{ page.title }}</title>
+        <link rel="stylesheet" href="css/docs.css" />
+        {% include head_custom.html %}
+    </head>
+    <body>
+        {% include sidebar.html %}
+        <div id="container" class="container">
+            <a href="https://www.noser.net">
+                <img src="logo-256.png" class="logo" />
+            </a>
+            {{ content }}
+        </div>
+    </body>
+    <footer class="site-footer">
+        {{site.footer_content}}
+        <a href="https://github.com/a1ecbr0wn/r53-ddns">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+</html>

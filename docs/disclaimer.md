@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: docs
+title: "Disclaimer | alienware-cli"
 nav_order: 4
 ---
 

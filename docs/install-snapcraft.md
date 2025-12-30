@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: docs
+title: "Snapcraft Installation | alienware-cli"
 nav_order: 1
 parent: Installation
 ---
