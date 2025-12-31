@@ -1,0 +1,19 @@
+- title: alienware-cli
+  url: /
+  icon: "fa-regular fa-house"
+
+- title: Install
+  url: /install
+  icon: "fa-solid fa-download"
+
+- title: Issues
+  url: /issues
+  icon: "fa-solid fa-exclamation-triangle"
+
+- title: Contribute
+  url: /contribute
+  icon: "fa-solid fa-code-pull-request"
+
+- title: Disclaimer
+  url: /disclaimer
+  icon: "fa-solid fa-hand"
