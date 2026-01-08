@@ -3,11 +3,10 @@ name: Tag a release
 
 on:
   workflow_dispatch:
-    inputs: 
-
+    inputs:
       version:
-        description: 'Tag to apply, in the form "v0.0.0"'
-        required: true
+        description: 'Tag to apply, in the form "v0.0.0" or leave blank to automatically bump the version'
+        required: false
 
 jobs:
   tag-release:
@@ -15,28 +14,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@git-cliff
+
       - name: Check the version number from input
         run: |
-            echo "Validating that tag is a tag is in the correct format v0.0.1"
-            input_version="${{ github.event.inputs.version }}"
-            if grep -P '^v[0-9]+\.[0-9]+\.[0-9]+' <<< "${input_version}"; then
-                echo "tag=${input_version}" >> $GITHUB_ENV
-                echo "cargo_version=version = \"${input_version:1}\"" >> $GITHUB_ENV
-                echo "alienware_dep_version=alienware = { path = \"../alienware\", version = \"${input_version:1}\" }" >> $GITHUB_ENV
-            elif grep -P '^[0-9]+\.[0-9]+\.[0-9]+' <<< "${input_version}"; then
-                echo "tag=v${input_version}" >> $GITHUB_ENV
-                echo "cargo_version=version = \"${input_version}\"" >> $GITHUB_ENV
-                echo "alienware_dep_version=alienware = { path = \"../alienware\", version = \"${input_version}\" }" >> $GITHUB_ENV
-            else
-                false
-            fi
+          echo "Validating that tag is a tag is in the correct format v0.0.1"
+          input_version="${{ github.event.inputs.version }}"
+          if [ -z "${input_version}" ]; then
+              input_version=$(git-cliff --bumped-version)
+          fi
+          if grep -P '^v[0-9]+\.[0-9]+\.[0-9]+' <<< "${input_version}"; then
+              echo "tag=${input_version}" >> $GITHUB_ENV
+              echo "cargo_version=version = \"${input_version:1}\"" >> $GITHUB_ENV
+              echo "alienware_dep_version=alienware = { path = \"../alienware\", version = \"${input_version:1}\" }" >> $GITHUB_ENV
+          elif grep -P '^[0-9]+\.[0-9]+\.[0-9]+' <<< "${input_version}"; then
+              echo "tag=v${input_version}" >> $GITHUB_ENV
+              echo "cargo_version=version = \"${input_version}\"" >> $GITHUB_ENV
+              echo "alienware_dep_version=alienware = { path = \"../alienware\", version = \"${input_version}\" }" >> $GITHUB_ENV
+          else
+              false
+          fi
 
       - name: Setup GPG
         run: |
           echo "${{ secrets.SIGNINGKEY }}" | gpg --import
-
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Setup git config
         run: |
@@ -49,17 +56,17 @@ jobs:
 
       - name: Replace the version number in the Cargo.toml files
         run: |
-            sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware/Cargo.toml
-            sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware_cli/Cargo.toml
-            sed -i 's#^alienware = { path = "../alienware", version = .*#${{ env.alienware_dep_version }}#g' alienware_cli/Cargo.toml
-    
+          sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware/Cargo.toml
+          sed -i 's/^version = .*/${{ env.cargo_version }}/g' alienware_cli/Cargo.toml
+          sed -i 's#^alienware = { path = "../alienware", version = .*#${{ env.alienware_dep_version }}#g' alienware_cli/Cargo.toml
+
       - name: Add, push, tag, push
         run: |
-            git add .
-            git commit -S -m "Release ${{ env.tag }}"
-            git push -f
-            git tag ${{ env.tag }} -s -m "Release ${{ env.tag }}"
-            git push origin ${{ env.tag }} -f
+          git add .
+          git commit -S -m "Release ${{ env.tag }}"
+          git push -f
+          git tag ${{ env.tag }} -s -m "Release ${{ env.tag }}"
+          git push origin ${{ env.tag }} -f
 
       - name: Release Tag Repository Dispatch
         uses: benc-uk/workflow-dispatch@v1
